@@ -1,0 +1,5 @@
+name: AMQP
+type: module
+description: 'AMQP (with RabbitMQ) Integration for Drupal.'
+core_version_requirement: ^9
+php: 8.0

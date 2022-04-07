@@ -1,0 +1,21 @@
+services:
+  amqp.connection:
+    class: '\PhpAmqpLib\Connection\AMQPStreamConnection'
+    arguments:
+      - '172.21.0.3'
+      - '5672'
+      - 'guest'
+      - 'guest'
+      - '/'
+
+  Drupal\amqp\AMQPChannelFactory:
+    arguments:
+      - '@amqp.connection'
+
+  Drupal\amqp\Consumer:
+    autowire: true
+    arguments:
+      - '@amqp.connection'
+
+  Drupal\amqp\Queue:
+    autowire: true

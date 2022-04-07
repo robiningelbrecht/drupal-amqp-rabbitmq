@@ -1,0 +1,15 @@
+{
+    "description": "AMQP - RabbitMQ Integration for Drupal",
+    "extra": {
+        "drush": {
+            "services": {
+                "drush.services.yml": "^9"
+            }
+        }
+    },
+    "name": "drupal/amqp",
+    "require": {
+        "php-amqplib/php-amqplib": "^3.1"
+    },
+    "type": "drupal-module"
+}
