@@ -3,7 +3,6 @@
 namespace Drupal\amqp;
 
 use PhpAmqpLib\Channel\AMQPChannel;
-use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class Consumer
@@ -12,7 +11,7 @@ class Consumer
   private ?AMQPChannel $channel = null;
 
   public function __construct(
-    private AMQPStreamConnection $connection,
+    private AMQPStreamConnectionFactory $AMQPStreamConnectionFactory,
     private AMQPChannelFactory $AMQPChannelFactory,
     private ConsoleLog $consoleLog,
   )
@@ -44,7 +43,7 @@ class Consumer
           throw new WorkerMaxLifeTimeOrIterationsExceeded();
         }
 
-        $consoleLog->log(ConsoleLog::SUCCESS, sprintf('Worker %s processing message %s', $worker::class, $message->getDeliveryTag()));
+        $consoleLog->success(sprintf('Worker %s processing message %s', $worker::class, $message->getDeliveryTag()));
         $worker->processMessage($message);
         $message->getChannel()->basic_ack($message->getDeliveryTag());
       } catch (WorkerMaxLifeTimeOrIterationsExceeded $e) {
@@ -67,7 +66,7 @@ class Consumer
     } catch (WorkerMaxLifeTimeOrIterationsExceeded) {
       $this->consoleLog->warning('Worker max life time or iterations exceeded. Closing connection.');
       $channel->close();
-      $this->connection->close();
+      $this->AMQPStreamConnectionFactory->get()->close();
     }
   }
 }

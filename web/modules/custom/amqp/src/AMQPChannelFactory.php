@@ -10,7 +10,7 @@ class AMQPChannelFactory
   private ?AMQPChannel $channel = null;
 
   public function __construct(
-    private AMQPStreamConnection $connection
+    private AMQPStreamConnectionFactory $AMQPStreamConnectionFactory
   )
   {
 
@@ -19,7 +19,7 @@ class AMQPChannelFactory
   public function getForQueue(Queue $queue): AMQPChannel
   {
     if (null === $this->channel) {
-      $this->channel = $this->connection->channel();
+      $this->channel = $this->AMQPStreamConnectionFactory->get()->channel();
 
       /*
        * name: $queue

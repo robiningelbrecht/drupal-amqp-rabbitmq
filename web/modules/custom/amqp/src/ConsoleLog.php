@@ -23,6 +23,10 @@ class ConsoleLog implements LoggerInterface, IOAwareInterface
     $this->setOutput(new ConsoleOutput());
   }
 
+  public function success($message, array $context = []) : void{
+    $this->log(self::SUCCESS, $message, $context);
+  }
+
   public function log($level, $message, array $context = [])
   {
     $format = match ($level) {
@@ -34,7 +38,7 @@ class ConsoleLog implements LoggerInterface, IOAwareInterface
       RfcLogLevel::NOTICE => ' [%s] <fg=black;bg=yellow;options=bold>[notice]</fg=black;bg=yellow;options=bold>    %s',
       RfcLogLevel::INFO => ' [%s] <fg=default;bg=blue;options=bold>[info]</fg=default;bg=blue;options=bold>      %s',
       RfcLogLevel::DEBUG => ' [%s] <fg=default;bg=blue;options=bold>[debug]</fg=default;bg=blue;options=bold>     %s',
-      self::SUCCESS => ' [%s] <fg=white;bg=green;options=bold>[success]</fg=white;bg=green;options=bold>   %s',
+      self::SUCCESS => ' [%s] <fg=default;bg=green;options=bold>[success]</fg=default;bg=green;options=bold>   %s',
     };
 
     $this->writeln(sprintf($format, (new DrupalDateTime('now'))->format('H:i:s'), $message));

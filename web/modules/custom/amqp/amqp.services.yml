@@ -2,23 +2,16 @@ services:
   Drupal\amqp\ConsoleLog:
     autowire: true
 
-  amqp.connection:
-    class: '\PhpAmqpLib\Connection\AMQPStreamConnection'
+  Drupal\amqp\AMQPStreamConnectionFactory:
+    autowire: true
     arguments:
-      - '172.21.0.5'
-      - '5672'
-      - 'guest'
-      - 'guest'
-      - '/'
+      - '@settings'
 
   Drupal\amqp\AMQPChannelFactory:
-    arguments:
-      - '@amqp.connection'
+    autowire: true
 
   Drupal\amqp\Consumer:
     autowire: true
-    arguments:
-      - '@amqp.connection'
 
   Drupal\amqp\Queue:
     autowire: true
