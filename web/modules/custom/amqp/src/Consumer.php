@@ -30,9 +30,9 @@ class Consumer
   {
     $this->logStartupInfo($queue);
     $channel = $this->AMQPChannelFactory->getForQueue($queue);
-    $worker = $queue->getWorker();
 
-    $callback = static function (AMQPMessage $message) use ($worker) {
+    $callback = static function (AMQPMessage $message) use ($queue) {
+      $worker = $queue->getWorker();
       $logger = ConsoleLogger::create();
       $envelope = unserialize($message->getBody());
 
@@ -51,7 +51,7 @@ class Consumer
         throw $e;
       } catch (\Exception|\Error $exception) {
         $logger->error(sprintf('Worker "%s" could not process message %s', $worker->getName(), $message->getDeliveryTag()));
-        $worker->processFailure($envelope, $message, $exception);
+        $worker->processFailure($envelope, $message, $exception, $queue);
         // Ack the message to unblock queue. Worker should handle failed messages.
         $message->getChannel()->basic_ack($message->getDeliveryTag());
       }

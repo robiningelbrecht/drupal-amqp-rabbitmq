@@ -1,0 +1,14 @@
+services:
+  Drupal\cqrs\CommandDispatcher:
+    autowire: true
+
+  Drupal\cqrs\Worker\CommandWorker:
+    autowire: true
+
+  Drupal\cqrs\Queue\FailedCommandQueueFactory:
+    autowire: true
+
+  Drupal\cqrs\Queue\GeneralCommandQueue:
+    autowire: true
+    tags:
+      - { name: amqp_queue }
