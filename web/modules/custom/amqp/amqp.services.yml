@@ -1,5 +1,5 @@
 services:
-  Drupal\amqp\ConsoleLog:
+  Drupal\amqp\ConsoleLogger:
     autowire: true
 
   Drupal\amqp\AMQPStreamConnectionFactory:
@@ -13,5 +13,12 @@ services:
   Drupal\amqp\Consumer:
     autowire: true
 
-  Drupal\amqp\Queue:
+  Drupal\amqp\Queue\QueueFactory:
     autowire: true
+    tags:
+      - { name: service_collector, tag: amqp_queue, call: addQueue }
+
+  Drupal\amqp\Queue\SimpleQueue:
+    autowire: true
+    tags:
+      - { name: amqp_queue }

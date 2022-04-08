@@ -2,6 +2,7 @@
 
 namespace Drupal\amqp;
 
+use Drupal\amqp\Queue\Queue;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -13,7 +14,7 @@ class Consumer
   public function __construct(
     private AMQPStreamConnectionFactory $AMQPStreamConnectionFactory,
     private AMQPChannelFactory $AMQPChannelFactory,
-    private ConsoleLog $logger,
+    private ConsoleLogger $logger,
   )
   {
 
@@ -31,13 +32,15 @@ class Consumer
 
     $worker = $queue->getWorker();
     $this->logger->debug(sprintf(
-      'Worker ready to receive up to %s messages until %s.',
+      'Worker "%s" for queue "%s" ready to receive up to %s messages until %s.',
+      $worker->getName(),
+      $queue->getName(),
       $worker->getMaxIterations(),
       $worker->getMaxLifeTime()->format('Y-m-d H:i:s'),
     ));
 
     $callback = static function (AMQPMessage $message) use ($worker) {
-      $logger = ConsoleLog::create();
+      $logger = ConsoleLogger::create();
       try {
         if ($worker->maxLifeTimeReached() || $worker->maxIterationsReached()) {
           throw new WorkerMaxLifeTimeOrIterationsExceeded();

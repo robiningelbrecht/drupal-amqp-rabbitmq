@@ -2,17 +2,17 @@
 
 namespace Drupal\amqp\Worker;
 
-use Drupal\amqp\ConsoleLog;
+use Drupal\amqp\ConsoleLogger;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class SimpleQueueWorker extends BaseWorker
 {
-  private ConsoleLog $logger;
+  private ConsoleLogger $logger;
 
   public function __construct()
   {
     parent::__construct();
-    $this->logger = ConsoleLog::create();
+    $this->logger = ConsoleLogger::create();
   }
 
   public function getName(): string

@@ -2,8 +2,8 @@
 
 namespace Drupal\amqp;
 
-use PhpAmqpLib\Connection\AMQPStreamConnection;
 use \PhpAmqpLib\Channel\AMQPChannel;
+use \Drupal\amqp\Queue\Queue;
 
 class AMQPChannelFactory
 {

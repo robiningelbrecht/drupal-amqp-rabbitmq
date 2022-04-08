@@ -10,7 +10,7 @@ use Robo\Common\IO;
 use Robo\Contract\IOAwareInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
-class ConsoleLog implements LoggerInterface, IOAwareInterface
+class ConsoleLogger implements LoggerInterface, IOAwareInterface
 {
 
   public const SUCCESS = 8;
