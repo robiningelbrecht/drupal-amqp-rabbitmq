@@ -1,8 +1,11 @@
 services:
+  Drupal\amqp\ConsoleLog:
+    autowire: true
+
   amqp.connection:
     class: '\PhpAmqpLib\Connection\AMQPStreamConnection'
     arguments:
-      - '172.21.0.3'
+      - '172.21.0.5'
       - '5672'
       - 'guest'
       - 'guest'
