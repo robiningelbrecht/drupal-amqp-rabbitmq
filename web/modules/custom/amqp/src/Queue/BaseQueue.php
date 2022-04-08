@@ -3,6 +3,7 @@
 namespace Drupal\amqp\Queue;
 
 use Drupal\amqp\AMQPChannelFactory;
+use Drupal\amqp\AMQPEnvelope;
 use PhpAmqpLib\Message\AMQPMessage;
 
 abstract class BaseQueue implements Queue
@@ -15,24 +16,24 @@ abstract class BaseQueue implements Queue
 
   }
 
-  public function queue(string $amqpMessage): void
+  public function queue(AMQPEnvelope $envelope): void
   {
     $properties = ['content_type' => 'text/plain', 'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT];
-    $message = new AMQPMessage($amqpMessage, $properties);
+    $message = new AMQPMessage(serialize($envelope), $properties);
     $this->AMQPChannelFactory->getForQueue($this)->basic_publish($message, null, $this->getName());
   }
 
-  public function queueBatch(array $amqpMessages): void
+  public function queueBatch(array $envelopes): void
   {
-    if (empty($amqpMessages)) {
+    if (empty($envelopes)) {
       return;
     }
 
     $channel = $this->AMQPChannelFactory->getForQueue($this);
 
-    foreach ($amqpMessages as $amqpMessage) {
+    foreach ($envelopes as $envelope) {
       $properties = ['content_type' => 'text/plain', 'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT];
-      $message = new AMQPMessage($amqpMessage, $properties);
+      $message = new AMQPMessage(serialize($envelope), $properties);
       $channel->batch_basic_publish($message, null, $this->getName());
     }
     $channel->publish_batch();

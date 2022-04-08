@@ -7,6 +7,7 @@ use Drupal\amqp\Worker\Worker;
 
 class SimpleQueue extends BaseQueue
 {
+
   public function getName(): string
   {
     return 'simple-queue';

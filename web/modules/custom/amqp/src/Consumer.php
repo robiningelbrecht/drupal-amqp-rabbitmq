@@ -3,6 +3,7 @@
 namespace Drupal\amqp;
 
 use Drupal\amqp\Queue\Queue;
+use Drupal\amqp\Worker\Worker;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -27,27 +28,21 @@ class Consumer
 
   public function consume(Queue $queue)
   {
+    $this->logStartupInfo($queue);
     $channel = $this->AMQPChannelFactory->getForQueue($queue);
-    $this->logger->debug('Waiting for messages. To exit press CTRL+C');
-
     $worker = $queue->getWorker();
-    $this->logger->debug(sprintf(
-      'Worker "%s" for queue "%s" ready to receive up to %s messages until %s.',
-      $worker->getName(),
-      $queue->getName(),
-      $worker->getMaxIterations(),
-      $worker->getMaxLifeTime()->format('Y-m-d H:i:s'),
-    ));
 
     $callback = static function (AMQPMessage $message) use ($worker) {
       $logger = ConsoleLogger::create();
+      $envelope = unserialize($message->getBody());
+
       try {
         if ($worker->maxLifeTimeReached() || $worker->maxIterationsReached()) {
           throw new WorkerMaxLifeTimeOrIterationsExceeded();
         }
 
-        $logger->success(sprintf('Worker "%s" started processing message %s', $worker->getName(), $message->getDeliveryTag()));
-        $worker->processMessage($message);
+        $logger->debug(sprintf('Worker "%s" started processing message %s', $worker->getName(), $message->getDeliveryTag()));
+        $worker->processMessage($envelope, $message);
         $message->getChannel()->basic_ack($message->getDeliveryTag());
       } catch (WorkerMaxLifeTimeOrIterationsExceeded $e) {
         // Requeue message to make sure next consumer can process it.
@@ -55,8 +50,10 @@ class Consumer
         $message->getChannel()->basic_nack($message->getDeliveryTag(), false, true);
         throw $e;
       } catch (\Exception|\Error $exception) {
-        $logger->error(sprintf('Worker %s could not process message: %s', $worker::class, $message->getDeliveryTag()));
-        $worker->processFailure($message, $exception);
+        $logger->error(sprintf('Worker "%s" could not process message %s', $worker->getName(), $message->getDeliveryTag()));
+        $worker->processFailure($envelope, $message, $exception);
+        // Ack the message to unblock queue. Worker should handle failed messages.
+        $message->getChannel()->basic_ack($message->getDeliveryTag());
       }
     };
 
@@ -72,4 +69,27 @@ class Consumer
       $this->AMQPStreamConnectionFactory->get()->close();
     }
   }
+
+  private function logStartupInfo(Queue $queue): void
+  {
+    $worker = $queue->getWorker();
+
+    $this->logger->debug('Waiting for messages, to exit press CTRL+C');
+    $this->logger->debug(sprintf(
+      'Worker "%s" for queue "%s" ready to receive up to:',
+      $worker->getName(),
+      $queue->getName(),
+    ));
+    $this->logger->debug(sprintf(
+      '  ➜ %s messages',
+      $worker->getMaxIterations(),
+    ));
+    $this->logger->debug(sprintf(
+      '  ➜ until %s (max life time is %s)',
+      $worker->getMaxLifeTime()->format('Y-m-d H:i:s'),
+      $worker->getMaxLifeTimeInterval()->format('%h hour(s), %i minutes')
+    ));
+    $this->logger->debug('=================================================================================');
+  }
+
 }

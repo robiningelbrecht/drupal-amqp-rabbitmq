@@ -2,6 +2,7 @@
 
 namespace Drupal\amqp\Worker;
 
+use Drupal\amqp\AMQPEnvelope;
 use Drupal\Core\Datetime\DrupalDateTime;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -9,9 +10,9 @@ interface Worker
 {
   public function getName(): string;
 
-  public function processMessage(AMQPMessage $message): void;
+  public function processMessage(AMQPEnvelope $envelope, AMQPMessage $message): void;
 
-  public function processFailure(AMQPMessage $message, \Throwable $exception): void;
+  public function processFailure(AMQPEnvelope $envelope, AMQPMessage $message, \Throwable $exception): void;
 
   public function maxIterationsReached(): bool;
 
@@ -20,4 +21,6 @@ interface Worker
   public function getMaxIterations(): int;
 
   public function getMaxLifeTime(): DrupalDateTime;
+
+  public function getMaxLifeTimeInterval(): \DateInterval;
 }

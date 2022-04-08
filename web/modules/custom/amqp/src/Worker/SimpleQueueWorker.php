@@ -2,6 +2,7 @@
 
 namespace Drupal\amqp\Worker;
 
+use Drupal\amqp\AMQPEnvelope;
 use Drupal\amqp\ConsoleLogger;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -20,13 +21,25 @@ class SimpleQueueWorker extends BaseWorker
     return 'Simple queue worker';
   }
 
-  public function processMessage(AMQPMessage $message): void
+  public function processMessage(AMQPEnvelope $envelope, AMQPMessage $message): void
   {
-    $this->logger->success(sprintf('Processed message with body "%s"', $message->getBody()));
+    $this->logger->success(sprintf(
+      'Processed message with content "%s", queued on %s',
+      $envelope->getContent(),
+      $envelope->getStampTime()->format('H:i:s')
+    ));
   }
 
-  public function processFailure(AMQPMessage $message, \Throwable $exception): void
+  public function processFailure(AMQPEnvelope $envelope, AMQPMessage $message, \Throwable $exception): void
   {
-    $this->logger->success(sprintf('Could not processes message with body "%s"', $message->getBody()));
+    $this->logger->error(sprintf(
+      'Could not processes message with content "%s", queued on %s',
+      $envelope->getContent(),
+      $envelope->getStampTime()->format('H:i:s')
+    ));
+    $this->logger->error(sprintf(
+      'Exception: %s',
+      $exception->getMessage(),
+    ));
   }
 }

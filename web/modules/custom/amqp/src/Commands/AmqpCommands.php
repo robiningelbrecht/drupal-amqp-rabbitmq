@@ -2,8 +2,10 @@
 
 namespace Drupal\amqp\Commands;
 
+use Drupal\amqp\AMQPEnvelope;
 use Drupal\amqp\Consumer;
 use Drupal\amqp\Queue\QueueFactory;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drush\Commands\DrushCommands;
 
 class AmqpCommands extends DrushCommands
@@ -18,22 +20,26 @@ class AmqpCommands extends DrushCommands
   }
 
   /**
-   * @command amqp:consumer
+   * @command amqp:consume
    */
-  public function consumer(string $queueName)
+  public function consume(string $queueName)
   {
     $queue = $this->queueFactory->getQueue($queueName);
     $this->consumer->consume($queue);
   }
 
   /**
-   * @command amqp:queue
+   * @command amqp:queue-test
    */
-  public function queue(string $queueName)
+  public function queueTest()
   {
-    $queue = $this->queueFactory->getQueue($queueName);
-    $queue->queue('test one');
-    $queue->queueBatch(['test batch one', 'test batch two']);
+    $queue = $this->queueFactory->getQueue('simple-queue');
+
+    $queue->queue(AMQPEnvelope::fromContentAndDate('test one', new DrupalDateTime('now')));
+    $queue->queueBatch([
+      AMQPEnvelope::fromContentAndDate('test batch one', new DrupalDateTime('now')),
+      AMQPEnvelope::fromContentAndDate('test batch two', new DrupalDateTime('now')),
+    ]);
   }
 
 }

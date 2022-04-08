@@ -2,6 +2,7 @@
 
 namespace Drupal\amqp\Queue;
 
+use Drupal\amqp\AMQPEnvelope;
 use Drupal\amqp\Worker\Worker;
 
 interface Queue
@@ -10,7 +11,7 @@ interface Queue
 
   public function getWorker(): Worker;
 
-  public function queue(string $amqpMessage): void;
+  public function queue(AMQPEnvelope $envelope): void;
 
-  public function queueBatch(array $amqpMessages): void;
+  public function queueBatch(array $envelopes): void;
 }
