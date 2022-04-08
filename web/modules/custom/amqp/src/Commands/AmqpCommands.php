@@ -27,7 +27,7 @@ class AmqpCommands extends DrushCommands {
    * @command amqp:queue
    */
   public function queue() {
-    $this->queue->queue('test');
+    $this->queue->queue('test2');
   }
 
 }

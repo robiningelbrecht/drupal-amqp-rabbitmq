@@ -1,13 +1,11 @@
 <?php
 
-namespace Drupal\amqp;
+namespace Drupal\amqp\Worker;
 
 use Drupal\Core\Datetime\DrupalDateTime;
-use PhpAmqpLib\Message\AMQPMessage;
 
-class Worker
+abstract class BaseWorker implements Worker
 {
-
   private const MAX_LIFE_TIME_INTERVAL = 'PT1H';
   private const MAX_ITERATIONS = 100000;
 
@@ -16,22 +14,12 @@ class Worker
 
   public function __construct()
   {
-    $this->maxLifeTimeDateTime = (new DrupalDateTime('now'))->add(new \DateInterval(self::MAX_LIFE_TIME_INTERVAL));
-  }
-
-  public function processMessage(AMQPMessage $message): void
-  {
-
-  }
-
-  public function processFailure(AMQPMessage $message, \Throwable $exception): void
-  {
-
+    $this->maxLifeTimeDateTime = (new DrupalDateTime('now'))->add($this->getMaxLifeTimeInterval());
   }
 
   public function maxIterationsReached(): bool
   {
-    return $this->counter++ >= self::MAX_ITERATIONS;
+    return $this->counter++ >= $this->getMaxIterations();
   }
 
   public function maxLifeTimeReached(): bool
@@ -47,5 +35,10 @@ class Worker
   public function getMaxLifeTime(): DrupalDateTime
   {
     return $this->maxLifeTimeDateTime;
+  }
+
+  public function getMaxLifeTimeInterval(): \DateInterval
+  {
+    return new \DateInterval(self::MAX_LIFE_TIME_INTERVAL);
   }
 }

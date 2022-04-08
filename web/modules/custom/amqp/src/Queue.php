@@ -2,6 +2,8 @@
 
 namespace Drupal\amqp;
 
+use Drupal\amqp\Worker\SimpleQueueWorker;
+use Drupal\amqp\Worker\Worker;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class Queue
@@ -21,7 +23,7 @@ class Queue
 
   public function getWorker(): Worker
   {
-    return new Worker();
+    return new SimpleQueueWorker();
   }
 
   public function queue(string $amqpMessage): void

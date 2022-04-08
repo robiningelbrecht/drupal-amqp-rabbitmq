@@ -23,7 +23,8 @@ class ConsoleLog implements LoggerInterface, IOAwareInterface
     $this->setOutput(new ConsoleOutput());
   }
 
-  public function success($message, array $context = []) : void{
+  public function success($message, array $context = []): void
+  {
     $this->log(self::SUCCESS, $message, $context);
   }
 
@@ -42,5 +43,10 @@ class ConsoleLog implements LoggerInterface, IOAwareInterface
     };
 
     $this->writeln(sprintf($format, (new DrupalDateTime('now'))->format('H:i:s'), $message));
+  }
+
+  public static function create(): self
+  {
+    return new self();
   }
 }
