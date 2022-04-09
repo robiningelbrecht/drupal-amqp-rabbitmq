@@ -87,5 +87,10 @@
                 "      composer remove drupal/core-project-message"
             ]
         }
+    },
+    "require-dev": {
+        "drupal/core-dev": "^9",
+        "phpspec/prophecy-phpunit": "^2",
+        "spatie/phpunit-snapshot-assertions": "^4.2"
     }
 }

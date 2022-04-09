@@ -28,7 +28,7 @@ abstract class CommandQueue extends BaseQueue
   public function queue(Envelope $envelope): void
   {
     if(!$envelope instanceof Command){
-      throw new \RuntimeException('This queue requires a command to be queued');
+      throw new \RuntimeException(sprintf('Queue "%s" requires a command to be queued, %s given', $this->getName(), $envelope::class));
     }
 
     parent::queue($envelope);

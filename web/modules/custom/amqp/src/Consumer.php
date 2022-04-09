@@ -3,7 +3,7 @@
 namespace Drupal\amqp;
 
 use Drupal\amqp\Queue\Queue;
-use Drupal\amqp\Worker\Worker;
+use Drupal\amqp\Worker\WorkerMaxLifeTimeOrIterationsExceeded;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 

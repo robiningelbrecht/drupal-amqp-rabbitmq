@@ -1,0 +1,1 @@
+Waiting for messages, to exit press CTRL+C

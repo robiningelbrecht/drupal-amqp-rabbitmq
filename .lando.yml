@@ -48,6 +48,9 @@ events:
     - rabbitmq: echo -e "\n\e[36mRABBITMQ IP ADDRESS:\e[32m"
     - rabbitmq: hostname -i | cut -d' ' -f1
 tooling:
+  phpunit:
+    service: appserver
+    cmd: 'vendor/bin/phpunit -c phpunit.xml.dist'
   # Set up command "Lando rabbit" for basic RabbitMQ commands
   rabbit:
     service: rabbitmq
