@@ -15,7 +15,7 @@ class AMQPStreamConnectionFactoryTest extends UnitTestCase
     $AMQPStreamConnectionFactory = new AMQPStreamConnectionFactory(Settings::getInstance());
 
     $this->expectException(AMQPIOException::class);
-    $this->expectExceptionMessage('stream_socket_client(): Unable to connect to tcp://some-host:port (php_network_getaddresses: getaddrinfo for some-host failed: Name or service not known)');
+    $this->expectExceptionMessage('stream_socket_client(): Unable to connect to tcp://some-host:port (php_network_getaddresses: getaddrinfo for some-host failed:');
 
     $AMQPStreamConnectionFactory->get();
   }
