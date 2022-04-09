@@ -3,7 +3,7 @@
 namespace Drupal\domain\DrushCommand;
 
 use Drupal\amqp\Queue\QueueFactory;
-use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\domain\AddDatabaseLog\AddDatabaseLog;
 use Drush\Commands\DrushCommands;
 
@@ -26,7 +26,7 @@ class DomainDrushCommands extends DrushCommands
 
     $queue->queue(new AddDatabaseLog(
       'This message originated from a queued command',
-      new DrupalDateTime('now')
+      new DateTimePlus('now')
     ));
   }
 }

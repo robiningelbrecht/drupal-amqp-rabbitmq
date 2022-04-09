@@ -2,14 +2,14 @@
 
 namespace Drupal\domain\AddDatabaseLog;
 
-use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\cqrs\Command;
 
 class AddDatabaseLog extends Command
 {
   public function __construct(
     private string $message,
-    DrupalDateTime $stampTime
+    DateTimePlus $stampTime
   )
   {
     parent::__construct($stampTime);

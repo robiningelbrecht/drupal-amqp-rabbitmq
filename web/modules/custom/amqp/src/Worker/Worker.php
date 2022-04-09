@@ -4,7 +4,7 @@ namespace Drupal\amqp\Worker;
 
 use Drupal\amqp\Envelope\Envelope;
 use Drupal\amqp\Queue\Queue;
-use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Component\Datetime\DateTimePlus;
 use PhpAmqpLib\Message\AMQPMessage;
 
 interface Worker
@@ -21,7 +21,7 @@ interface Worker
 
   public function getMaxIterations(): int;
 
-  public function getMaxLifeTime(): DrupalDateTime;
+  public function getMaxLifeTime(): DateTimePlus;
 
   public function getMaxLifeTimeInterval(): \DateInterval;
 }

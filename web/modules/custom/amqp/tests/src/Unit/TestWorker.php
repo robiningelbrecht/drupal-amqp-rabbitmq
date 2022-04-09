@@ -6,7 +6,6 @@ use Drupal\amqp\Envelope\Envelope;
 use Drupal\amqp\Queue\Queue;
 use Drupal\amqp\Worker\Worker;
 use Drupal\Component\Datetime\DateTimePlus;
-use Drupal\Core\Datetime\DrupalDateTime;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class TestWorker implements Worker
@@ -17,7 +16,7 @@ class TestWorker implements Worker
   private int $counter = 0;
 
   public function __construct(
-    private DrupalDateTime $maxLifeTimeDateTime
+    private DateTimePlus $maxLifeTimeDateTime
   )
   {
   }
@@ -52,7 +51,7 @@ class TestWorker implements Worker
     return self::MAX_ITERATIONS;
   }
 
-  public function getMaxLifeTime(): DrupalDateTime
+  public function getMaxLifeTime(): DateTimePlus
   {
     return $this->maxLifeTimeDateTime;
   }

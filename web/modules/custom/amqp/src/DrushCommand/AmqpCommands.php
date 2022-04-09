@@ -5,7 +5,7 @@ namespace Drupal\amqp\DrushCommand;
 use Drupal\amqp\Consumer;
 use Drupal\amqp\Envelope\AMQPEnvelope;
 use Drupal\amqp\Queue\QueueFactory;
-use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Component\Datetime\DateTimePlus;
 use Drush\Commands\DrushCommands;
 
 class AmqpCommands extends DrushCommands
@@ -35,10 +35,10 @@ class AmqpCommands extends DrushCommands
   {
     $queue = $this->queueFactory->getQueue('simple-queue');
 
-    $queue->queue(AMQPEnvelope::fromContentAndDate('test one', new DrupalDateTime('now')));
+    $queue->queue(AMQPEnvelope::fromContentAndDate('test one', new DateTimePlus('now')));
     $queue->queueBatch([
-      AMQPEnvelope::fromContentAndDate('test batch one', new DrupalDateTime('now')),
-      AMQPEnvelope::fromContentAndDate('test batch two', new DrupalDateTime('now')),
+      AMQPEnvelope::fromContentAndDate('test batch one', new DateTimePlus('now')),
+      AMQPEnvelope::fromContentAndDate('test batch two', new DateTimePlus('now')),
     ]);
   }
 }

@@ -2,11 +2,11 @@
 
 namespace Drupal\amqp\Envelope;
 
-use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Component\Datetime\DateTimePlus;
 
 interface Envelope
 {
   public function getContent(): string;
 
-  public function getStampTime(): DrupalDateTime;
+  public function getStampTime(): DateTimePlus;
 }

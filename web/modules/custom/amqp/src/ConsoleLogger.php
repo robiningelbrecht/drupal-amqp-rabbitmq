@@ -2,7 +2,7 @@
 
 namespace Drupal\amqp;
 
-use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Logger\RfcLoggerTrait;
 use Drupal\Core\Logger\RfcLogLevel;
 use Psr\Log\LoggerInterface;
@@ -20,7 +20,7 @@ class ConsoleLogger implements LoggerInterface, IOAwareInterface
 
   public function __construct(
     OutputInterface $output,
-    private DrupalDateTime $logDateTime
+    private DateTimePlus $logDateTime
   )
   {
     $this->setOutput($output);
@@ -50,6 +50,6 @@ class ConsoleLogger implements LoggerInterface, IOAwareInterface
 
   public static function create(): self
   {
-    return new self(new ConsoleOutput(), new DrupalDateTime('now'));
+    return new self(new ConsoleOutput(), new DateTimePlus('now'));
   }
 }

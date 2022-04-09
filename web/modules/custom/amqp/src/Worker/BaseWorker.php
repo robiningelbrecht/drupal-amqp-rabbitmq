@@ -2,7 +2,7 @@
 
 namespace Drupal\amqp\Worker;
 
-use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Component\Datetime\DateTimePlus;
 
 abstract class BaseWorker implements Worker
 {
@@ -10,11 +10,11 @@ abstract class BaseWorker implements Worker
   private const MAX_ITERATIONS = 100000;
 
   private int $counter = 0;
-  private DrupalDateTime $maxLifeTimeDateTime;
+  private DateTimePlus $maxLifeTimeDateTime;
 
   public function __construct()
   {
-    $this->maxLifeTimeDateTime = (new DrupalDateTime('now'))->add($this->getMaxLifeTimeInterval());
+    $this->maxLifeTimeDateTime = (new DateTimePlus('now'))->add($this->getMaxLifeTimeInterval());
   }
 
   public function maxIterationsReached(): bool
@@ -24,7 +24,7 @@ abstract class BaseWorker implements Worker
 
   public function maxLifeTimeReached(): bool
   {
-    return new DrupalDateTime('now') >= $this->maxLifeTimeDateTime;
+    return new DateTimePlus('now') >= $this->maxLifeTimeDateTime;
   }
 
   public function getMaxIterations(): int
@@ -32,7 +32,7 @@ abstract class BaseWorker implements Worker
     return self::MAX_ITERATIONS;
   }
 
-  public function getMaxLifeTime(): DrupalDateTime
+  public function getMaxLifeTime(): DateTimePlus
   {
     return $this->maxLifeTimeDateTime;
   }

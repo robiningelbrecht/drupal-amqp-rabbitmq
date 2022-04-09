@@ -2,14 +2,14 @@
 
 namespace Drupal\amqp\Envelope;
 
-use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Component\Datetime\DateTimePlus;
 
 class AMQPEnvelope implements Envelope
 {
 
   private function __construct(
     private string $content,
-    private DrupalDateTime $stampTime,
+    private DateTimePlus $stampTime,
   )
   {
   }
@@ -19,12 +19,12 @@ class AMQPEnvelope implements Envelope
     return $this->content;
   }
 
-  public function getStampTime(): DrupalDateTime
+  public function getStampTime(): DateTimePlus
   {
     return $this->stampTime;
   }
 
-  public static function fromContentAndDate(string $content, DrupalDateTime $stampTime): self
+  public static function fromContentAndDate(string $content, DateTimePlus $stampTime): self
   {
     return new self($content, $stampTime);
   }
