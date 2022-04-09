@@ -31,14 +31,15 @@ class AmqpCommands extends DrushCommands
   /**
    * @command amqp:simple-queue-test
    */
-  public function simpleQueueTest()
+  public function simpleQueueTest(string $stampTime = null)
   {
-    $queue = $this->queueFactory->getQueue('simple-queue');
+    $stampDateTime = new DateTimePlus($stampTime ?? 'now');
 
-    $queue->queue(AMQPEnvelope::fromContentAndDate('test one', new DateTimePlus('now')));
+    $queue = $this->queueFactory->getQueue('simple-queue');
+    $queue->queue(AMQPEnvelope::fromContentAndDate('test one', $stampDateTime));
     $queue->queueBatch([
-      AMQPEnvelope::fromContentAndDate('test batch one', new DateTimePlus('now')),
-      AMQPEnvelope::fromContentAndDate('test batch two', new DateTimePlus('now')),
+      AMQPEnvelope::fromContentAndDate('test batch one', $stampDateTime),
+      AMQPEnvelope::fromContentAndDate('test batch two', $stampDateTime),
     ]);
   }
 }
