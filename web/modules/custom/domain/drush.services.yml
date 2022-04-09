@@ -1,0 +1,6 @@
+services:
+  domain.commands:
+    class: '\Drupal\domain\DrushCommand\DomainDrushCommands'
+    autowire: true
+    tags:
+      - { name: drush.command }

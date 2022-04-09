@@ -3,3 +3,5 @@ type: module
 description: 'CQRS implementation for Drupal. Supports AMQP'
 core_version_requirement: ^9
 php: 8.0
+dependencies:
+  amqp:amqp

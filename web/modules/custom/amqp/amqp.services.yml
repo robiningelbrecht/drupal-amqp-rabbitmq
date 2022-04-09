@@ -13,10 +13,13 @@ services:
   Drupal\amqp\Consumer:
     autowire: true
 
+  Drupal\amqp\Worker\SimpleQueueWorker:
+    autowire: true
+
   Drupal\amqp\Queue\QueueFactory:
     autowire: true
     tags:
-      - { name: service_collector, tag: amqp_queue, call: addQueue }
+      - { name: service_collector, tag: amqp_queue, call: registerQueue }
 
   Drupal\amqp\Queue\SimpleQueue:
     autowire: true

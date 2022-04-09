@@ -7,7 +7,7 @@ use \Drupal\amqp\Queue\Queue;
 
 class AMQPChannelFactory
 {
-  private ?AMQPChannel $channel = null;
+  private array $channels = [];
 
   public function __construct(
     private AMQPStreamConnectionFactory $AMQPStreamConnectionFactory
@@ -18,8 +18,8 @@ class AMQPChannelFactory
 
   public function getForQueue(Queue $queue): AMQPChannel
   {
-    if (null === $this->channel) {
-      $this->channel = $this->AMQPStreamConnectionFactory->get()->channel();
+    if (!array_key_exists($queue->getName(), $this->channels)) {
+      $this->channels[$queue->getName()] = $this->AMQPStreamConnectionFactory->get()->channel();
 
       /*
        * name: $queue
@@ -28,11 +28,11 @@ class AMQPChannelFactory
        * exclusive: false // the queue can be accessed in other channels
        * auto_delete: false //the queue won't be deleted once the channel is closed.
        */
-      $this->channel->queue_declare($queue->getName(), false, true, false, false);
-      $this->channel->basic_qos(null, 1, null);
+      $this->channels[$queue->getName()]->queue_declare($queue->getName(), false, true, false, false);
+      $this->channels[$queue->getName()]->basic_qos(null, 1, null);
     }
 
-    return $this->channel;
+    return $this->channels[$queue->getName()];
   }
 
 

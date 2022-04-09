@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\amqp\Commands;
+namespace Drupal\amqp\DrushCommand;
 
-use Drupal\amqp\AMQPEnvelope;
 use Drupal\amqp\Consumer;
+use Drupal\amqp\Envelope\AMQPEnvelope;
 use Drupal\amqp\Queue\QueueFactory;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drush\Commands\DrushCommands;
@@ -29,9 +29,9 @@ class AmqpCommands extends DrushCommands
   }
 
   /**
-   * @command amqp:queue-test
+   * @command amqp:simple-queue-test
    */
-  public function queueTest()
+  public function simpleQueueTest()
   {
     $queue = $this->queueFactory->getQueue('simple-queue');
 
@@ -41,5 +41,4 @@ class AmqpCommands extends DrushCommands
       AMQPEnvelope::fromContentAndDate('test batch two', new DrupalDateTime('now')),
     ]);
   }
-
 }

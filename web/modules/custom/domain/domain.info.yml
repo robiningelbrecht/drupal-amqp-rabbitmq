@@ -1,0 +1,7 @@
+name: Domain
+type: module
+description: 'Holds the domain definition of our app'
+core_version_requirement: ^9
+php: 8.0
+dependencies:
+  cqrs:cqrs

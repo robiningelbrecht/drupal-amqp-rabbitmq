@@ -19,7 +19,7 @@ class FailedCommandQueue extends BaseQueue
 
   public function getName(): string
   {
-    $this->queue->getName() . '-failed';
+    return $this->queue->getName() . '-failed';
   }
 
   public function getWorker(): Worker

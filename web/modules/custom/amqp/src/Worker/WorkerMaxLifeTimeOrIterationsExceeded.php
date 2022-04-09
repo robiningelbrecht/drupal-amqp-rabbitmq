@@ -2,7 +2,7 @@
 
 namespace Drupal\amqp;
 
-class WorkerMaxLifeTimeOrIterationsExceeded extends \Exception
+class WorkerMaxLifeTimeOrIterationsExceeded extends \RuntimeException
 {
 
 }

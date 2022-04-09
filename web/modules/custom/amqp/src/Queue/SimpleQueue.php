@@ -2,11 +2,20 @@
 
 namespace Drupal\amqp\Queue;
 
+use Drupal\amqp\AMQPChannelFactory;
 use Drupal\amqp\Worker\SimpleQueueWorker;
 use Drupal\amqp\Worker\Worker;
 
 class SimpleQueue extends BaseQueue
 {
+
+  public function __construct(
+    private SimpleQueueWorker $simpleQueueWorker,
+    AMQPChannelFactory $AMQPChannelFactory
+  )
+  {
+    parent::__construct($AMQPChannelFactory);
+  }
 
   public function getName(): string
   {
@@ -15,6 +24,6 @@ class SimpleQueue extends BaseQueue
 
   public function getWorker(): Worker
   {
-    return new SimpleQueueWorker();
+    return $this->simpleQueueWorker;
   }
 }

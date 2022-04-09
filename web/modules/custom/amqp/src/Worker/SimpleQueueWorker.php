@@ -2,19 +2,19 @@
 
 namespace Drupal\amqp\Worker;
 
-use Drupal\amqp\AMQPEnvelope;
 use Drupal\amqp\ConsoleLogger;
+use Drupal\amqp\Envelope\Envelope;
 use Drupal\amqp\Queue\Queue;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class SimpleQueueWorker extends BaseWorker
 {
-  private ConsoleLogger $logger;
 
-  public function __construct()
+  public function __construct(
+    private ConsoleLogger $logger
+  )
   {
     parent::__construct();
-    $this->logger = ConsoleLogger::create();
   }
 
   public function getName(): string
@@ -22,7 +22,7 @@ class SimpleQueueWorker extends BaseWorker
     return 'Simple queue worker';
   }
 
-  public function processMessage(AMQPEnvelope $envelope, AMQPMessage $message): void
+  public function processMessage(Envelope $envelope, AMQPMessage $message): void
   {
     $this->logger->success(sprintf(
       'Processed message with content "%s", queued on %s',
@@ -31,7 +31,7 @@ class SimpleQueueWorker extends BaseWorker
     ));
   }
 
-  public function processFailure(AMQPEnvelope $envelope, AMQPMessage $message, \Throwable $exception, Queue $queue): void
+  public function processFailure(Envelope $envelope, AMQPMessage $message, \Throwable $exception, Queue $queue): void
   {
     $this->logger->error(sprintf(
       'Could not processes message with content "%s", queued on %s',

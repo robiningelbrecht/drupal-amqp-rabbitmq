@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\amqp;
+namespace Drupal\amqp\Envelope;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 
-class AMQPEnvelope
+class AMQPEnvelope implements Envelope
 {
+
   private function __construct(
     private string $content,
     private DrupalDateTime $stampTime,
-    private array $metadata = [],
   )
   {
   }
@@ -22,11 +22,6 @@ class AMQPEnvelope
   public function getStampTime(): DrupalDateTime
   {
     return $this->stampTime;
-  }
-
-  public function getMetadata(): array
-  {
-    return $this->metadata;
   }
 
   public static function fromContentAndDate(string $content, DrupalDateTime $stampTime): self

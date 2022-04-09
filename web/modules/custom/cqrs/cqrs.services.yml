@@ -2,8 +2,13 @@ services:
   Drupal\cqrs\CommandDispatcher:
     autowire: true
 
-  Drupal\cqrs\Worker\CommandWorker:
+  Drupal\cqrs\CommandQueueWorker:
     autowire: true
+
+  Drupal\cqrs\CommandHandlerFactory:
+    autowire: true
+    tags:
+      - { name: service_collector, tag: cqrs_command_handler, call: registerCommandHandler }
 
   Drupal\cqrs\Queue\FailedCommandQueueFactory:
     autowire: true
