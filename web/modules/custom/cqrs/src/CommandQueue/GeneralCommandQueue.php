@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\cqrs\Queue;
+namespace Drupal\cqrs\CommandQueue;
 
 class GeneralCommandQueue extends CommandQueue
 {

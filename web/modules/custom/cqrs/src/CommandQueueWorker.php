@@ -6,7 +6,7 @@ use Drupal\amqp\ConsoleLogger;
 use Drupal\amqp\Envelope\Envelope;
 use Drupal\amqp\Queue\Queue;
 use Drupal\amqp\Worker\BaseWorker;
-use Drupal\cqrs\Queue\FailedCommandQueueFactory;
+use Drupal\cqrs\CommandQueue\FailedCommandQueueFactory;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class CommandQueueWorker extends BaseWorker

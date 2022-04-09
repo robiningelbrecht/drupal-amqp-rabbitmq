@@ -1,0 +1,1 @@
+ [08:11] <fg=white;bg=red;options=bold>[critical]</fg=white;bg=red;options=bold>  Logging for level 2

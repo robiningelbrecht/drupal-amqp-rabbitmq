@@ -7,7 +7,7 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 class AMQPStreamConnectionFactory
 {
-  const CREDENTIALS = 'amqp_credentials';
+  private const CREDENTIALS = 'amqp_credentials';
 
   private ?AMQPStreamConnection $AMQPStreamConnection = null;
 

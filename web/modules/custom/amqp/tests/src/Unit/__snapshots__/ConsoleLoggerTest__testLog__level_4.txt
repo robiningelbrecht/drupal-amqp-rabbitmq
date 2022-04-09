@@ -1,0 +1,1 @@
+ [08:11] <fg=black;bg=yellow;options=bold>[warning]</fg=black;bg=yellow;options=bold>   Logging for level 4

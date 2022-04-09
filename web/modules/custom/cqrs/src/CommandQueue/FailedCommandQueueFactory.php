@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\cqrs\Queue;
+namespace Drupal\cqrs\CommandQueue;
 
 use Drupal\amqp\AMQPChannelFactory;
 use Drupal\amqp\Queue\Queue;

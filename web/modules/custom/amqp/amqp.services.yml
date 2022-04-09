@@ -1,6 +1,6 @@
 services:
   Drupal\amqp\ConsoleLogger:
-    autowire: true
+    factory: 'Drupal\amqp\ConsoleLogger::create'
 
   Drupal\amqp\AMQPStreamConnectionFactory:
     autowire: true

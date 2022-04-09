@@ -9,18 +9,21 @@ use Psr\Log\LoggerInterface;
 use Robo\Common\IO;
 use Robo\Contract\IOAwareInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class ConsoleLogger implements LoggerInterface, IOAwareInterface
 {
-
   public const SUCCESS = 8;
 
   use IO;
   use RfcLoggerTrait;
 
-  public function __construct()
+  public function __construct(
+    OutputInterface $output,
+    private DrupalDateTime $logDateTime
+  )
   {
-    $this->setOutput(new ConsoleOutput());
+    $this->setOutput($output);
   }
 
   public function success($message, array $context = []): void
@@ -42,11 +45,11 @@ class ConsoleLogger implements LoggerInterface, IOAwareInterface
       self::SUCCESS => ' [%s] <fg=default;bg=green;options=bold>[success]</fg=default;bg=green;options=bold>   %s',
     };
 
-    $this->writeln(sprintf($format, (new DrupalDateTime('now'))->format('H:i:s'), $message));
+    $this->writeln(sprintf($format, $this->logDateTime->format('H:i:s'), $message));
   }
 
   public static function create(): self
   {
-    return new self();
+    return new self(new ConsoleOutput(), new DrupalDateTime('now'));
   }
 }

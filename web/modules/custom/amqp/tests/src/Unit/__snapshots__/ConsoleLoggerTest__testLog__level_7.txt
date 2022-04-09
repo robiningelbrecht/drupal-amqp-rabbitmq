@@ -1,0 +1,1 @@
+ [08:11] <fg=default;bg=blue;options=bold>[debug]</fg=default;bg=blue;options=bold>     Logging for level 7
