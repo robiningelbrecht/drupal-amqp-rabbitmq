@@ -5,4 +5,9 @@
       <directory>web/modules/custom</directory>
     </testsuite>
   </testsuites>
+  <coverage processUncoveredFiles="true">
+    <include>
+      <directory suffix=".php">web/modules/custom/**/src</directory>
+    </include>
+  </coverage>
 </phpunit>

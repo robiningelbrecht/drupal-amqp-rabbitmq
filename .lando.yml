@@ -51,6 +51,9 @@ tooling:
   phpunit:
     service: appserver
     cmd: 'vendor/bin/phpunit -c phpunit.xml.dist'
+  phpunit-with-coverage:
+    service: appserver
+    cmd: 'XDEBUG_MODE=coverage vendor/bin/phpunit -c phpunit.xml.dist --coverage-html tmp/report'
   # Set up command "Lando rabbit" for basic RabbitMQ commands
   rabbit:
     service: rabbitmq
