@@ -1,7 +1,7 @@
 <h1 align="center">Drupal AMQP example</h1>
 
 <p align="center">
-	<img src="https://github.com/robiningelbrecht/continuous-integration-example/raw/master/readme/ci.png" alt="CI/CD">
+	<img src="https://github.com/robiningelbrecht/rupal-amqp-rabbitmq/raw/master/readme/RabbitMQ.png" alt="RabbitMQ">
 </p>
 
 <p align="center">
