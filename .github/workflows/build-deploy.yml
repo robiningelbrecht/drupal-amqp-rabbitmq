@@ -1,0 +1,83 @@
+name: Build & deploy
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    if: github.ref_name == 'master' || github.ref_name == 'development'
+    name: Create build ${{ github.run_number }} for ${{ github.ref_name }}
+    runs-on: ubuntu-latest
+    steps:
+      # https://github.com/marketplace/actions/checkout
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # https://github.com/marketplace/actions/setup-php-action
+      - name: Setup PHP 8.1
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-dev
+
+      # https://github.com/marketplace/actions/upload-a-build-artifact
+      - name: Create artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-${{ github.run_number }}
+          path: |
+            src/**
+            vendor/**
+
+  deploy:
+    name: Deploy to ${{ github.ref_name }}
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name }}
+      url: https://${{ github.ref_name }}.env
+    concurrency: ${{ github.ref_name }}
+    steps:
+      # https://github.com/marketplace/actions/download-a-build-artifact
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: release-${{ github.run_number }}
+
+      # https://github.com/marketplace/actions/rsync-deployments-action
+      - name: Rsync build to server
+        uses: burnett01/rsync-deployments@5.2
+        with:
+          switches: -avzr --delete
+          path: .
+          remote_path: /var/www/app/
+          remote_host: ${{ secrets.SSH_HOST }}
+          remote_user: ${{ secrets.SSH_USERNAME }}
+          remote_key: ${{ secrets.SSH_KEY }}
+
+      # https://github.com/marketplace/actions/ssh-remote-commands
+      - name: Run remote SSH commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            RELEASE_DIRECTORY=/var/www/release-${{ github.run_number }}
+            CURRENT_DIRECTORY=/var/www/app
+            
+            # Remove symlink.
+            rm -r "${CURRENT_DIRECTORY}"
+            
+            # Create symlink to new release.
+            ls -s "${RELEASE_DIRECTORY}" "${CURRENT_DIRECTORY}"
+            
+            # Run database migrations
+            ${CURRENT_DIRECTORY}/bin/console doctrine:migrations:migrate
+            
+            # Install updated crontab
+            crontab ${RELEASE_DIRECTORY}/crontab
+            
+            # Clear cache
+            ${CURRENT_DIRECTORY}/bin/console cache:clear
