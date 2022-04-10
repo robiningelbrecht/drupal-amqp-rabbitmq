@@ -3,12 +3,16 @@
 namespace Drupal\Tests\cqrs\Unit;
 
 use Drupal\Tests\UnitTestCase;
+use Spatie\Snapshots\MatchesSnapshots;
 
 class CommandTest extends UnitTestCase
 {
+  use MatchesSnapshots;
+
   public function testCommand(): void
   {
-    $command = new TestCommand(new \DateTimeImmutable('now'));
+    $time = new \DateTimeImmutable('now');
+    $command = new TestCommand($time);
     $command->setMetadata([
       'key1' => 'value1',
       'ley2' => 'value2',
@@ -18,5 +22,8 @@ class CommandTest extends UnitTestCase
       'key1' => 'value1',
       'ley2' => 'value2',
     ], $command->getMetadata());
+
+    $this->assertEquals($time, $command->getStampTime());
+    $this->assertMatchesTextSnapshot($command->getContent());
   }
 }
