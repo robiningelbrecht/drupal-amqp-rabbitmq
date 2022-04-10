@@ -4,7 +4,6 @@ namespace Drupal\cqrs;
 
 use Drupal\amqp\Envelope\Envelope;
 use Drupal\amqp\Envelope\MetadataAware;
-use Drupal\Component\Datetime\DateTimePlus;
 
 abstract class Command implements Envelope
 {
