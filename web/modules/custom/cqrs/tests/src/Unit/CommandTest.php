@@ -11,7 +11,7 @@ class CommandTest extends UnitTestCase
 
   public function testCommand(): void
   {
-    $time = new \DateTimeImmutable('now');
+    $time = new \DateTimeImmutable('2022-04-10 20:04:33');
     $command = new TestCommand($time);
     $command->setMetadata([
       'key1' => 'value1',
