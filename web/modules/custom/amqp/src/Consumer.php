@@ -30,10 +30,10 @@ class Consumer
   {
     $this->logStartupInfo($queue);
     $channel = $this->AMQPChannelFactory->getForQueue($queue);
+    $logger = $this->logger;
 
-    $callback = static function (AMQPMessage $message) use ($queue) {
+    $callback = static function (AMQPMessage $message) use ($queue, $logger) {
       $worker = $queue->getWorker();
-      $logger = ConsoleLogger::create();
       $envelope = unserialize($message->getBody());
 
       try {

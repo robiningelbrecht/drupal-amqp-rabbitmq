@@ -2,13 +2,12 @@
 
 namespace Drupal\amqp;
 
-use Drupal\Component\Datetime\DateTimePlus;
+use Drupal\amqp\Clock\Clock;
 use Drupal\Core\Logger\RfcLoggerTrait;
 use Drupal\Core\Logger\RfcLogLevel;
 use Psr\Log\LoggerInterface;
 use Robo\Common\IO;
 use Robo\Contract\IOAwareInterface;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ConsoleLogger implements LoggerInterface, IOAwareInterface
@@ -20,7 +19,7 @@ class ConsoleLogger implements LoggerInterface, IOAwareInterface
 
   public function __construct(
     OutputInterface $output,
-    private DateTimePlus $logDateTime
+    private Clock $clock
   )
   {
     $this->setOutput($output);
@@ -45,11 +44,6 @@ class ConsoleLogger implements LoggerInterface, IOAwareInterface
       self::SUCCESS => ' [%s] <fg=default;bg=green;options=bold>[success]</fg=default;bg=green;options=bold>   %s',
     };
 
-    $this->writeln(sprintf($format, $this->logDateTime->format('H:i:s'), $message));
-  }
-
-  public static function create(): self
-  {
-    return new self(new ConsoleOutput(), new DateTimePlus('now'));
+    $this->writeln(sprintf($format, $this->clock->getCurrentDateTimeImmutable()->format('H:i:s'), $message));
   }
 }

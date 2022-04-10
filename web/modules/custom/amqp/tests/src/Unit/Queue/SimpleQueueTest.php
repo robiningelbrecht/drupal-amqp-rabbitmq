@@ -6,7 +6,6 @@ use Drupal\amqp\AMQPChannelFactory;
 use Drupal\amqp\Envelope\AMQPEnvelope;
 use Drupal\amqp\Queue\SimpleQueue;
 use Drupal\amqp\Worker\SimpleQueueWorker;
-use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Tests\UnitTestCase;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -26,7 +25,7 @@ class SimpleQueueTest extends UnitTestCase
 
   public function testQueue(): void
   {
-    $envelope = AMQPEnvelope::fromContentAndDate('some-content', new DateTimePlus('2022-02-10'));
+    $envelope = AMQPEnvelope::fromContentAndDate('some-content', new \DateTimeImmutable('2022-02-10'));
 
     $channel = $this->createMock(AMQPChannel::class);
     $this->AMQPChannelFactory
@@ -46,8 +45,9 @@ class SimpleQueueTest extends UnitTestCase
     $this->simpleQueue->queue($envelope);
   }
 
-  public function testQueueBatch(): void{
-    $envelope = AMQPEnvelope::fromContentAndDate('some-content', new DateTimePlus('2022-02-10'));
+  public function testQueueBatch(): void
+  {
+    $envelope = AMQPEnvelope::fromContentAndDate('some-content', new \DateTimeImmutable('2022-02-10'));
 
     $channel = $this->createMock(AMQPChannel::class);
     $this->AMQPChannelFactory
@@ -71,7 +71,8 @@ class SimpleQueueTest extends UnitTestCase
     $this->simpleQueue->queueBatch([$envelope, $envelope]);
   }
 
-  public function testQueueBatchWhenEmpty(): void{
+  public function testQueueBatchWhenEmpty(): void
+  {
     $channel = $this->createMock(AMQPChannel::class);
     $this->AMQPChannelFactory
       ->expects($this->never())
@@ -88,7 +89,8 @@ class SimpleQueueTest extends UnitTestCase
     $this->simpleQueue->queueBatch([]);
   }
 
-  public function testQueueBatchItShouldThrowWhenInvalidEnvelope(): void{
+  public function testQueueBatchItShouldThrowWhenInvalidEnvelope(): void
+  {
     $channel = $this->createMock(AMQPChannel::class);
     $this->AMQPChannelFactory
       ->expects($this->never())

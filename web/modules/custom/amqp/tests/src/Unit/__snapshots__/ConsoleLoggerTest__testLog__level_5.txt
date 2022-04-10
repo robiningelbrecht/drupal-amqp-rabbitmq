@@ -1,1 +1,1 @@
- [08:11] <fg=black;bg=yellow;options=bold>[notice]</fg=black;bg=yellow;options=bold>    Logging for level 5
+ [20:10:04] <fg=black;bg=yellow;options=bold>[notice]</fg=black;bg=yellow;options=bold>    Logging for level 5

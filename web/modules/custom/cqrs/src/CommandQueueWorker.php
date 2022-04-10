@@ -2,6 +2,7 @@
 
 namespace Drupal\cqrs;
 
+use Drupal\amqp\Clock\Clock;
 use Drupal\amqp\ConsoleLogger;
 use Drupal\amqp\Envelope\Envelope;
 use Drupal\amqp\Queue\Queue;
@@ -14,10 +15,11 @@ class CommandQueueWorker extends BaseWorker
   public function __construct(
     private CommandDispatcher $commandDispatcher,
     private FailedCommandQueueFactory $failedCommandQueueFactory,
-    private ConsoleLogger $logger
+    private ConsoleLogger $logger,
+    Clock $clock
   )
   {
-    parent::__construct();
+    parent::__construct($clock);
   }
 
   public function getName(): string

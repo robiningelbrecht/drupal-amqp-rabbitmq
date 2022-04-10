@@ -2,10 +2,10 @@
 
 namespace Drupal\amqp\DrushCommand;
 
+use Drupal\amqp\Clock\Clock;
 use Drupal\amqp\Consumer;
 use Drupal\amqp\Envelope\AMQPEnvelope;
 use Drupal\amqp\Queue\QueueFactory;
-use Drupal\Component\Datetime\DateTimePlus;
 use Drush\Commands\DrushCommands;
 
 class AmqpCommands extends DrushCommands
@@ -14,6 +14,7 @@ class AmqpCommands extends DrushCommands
   public function __construct(
     private Consumer $consumer,
     private QueueFactory $queueFactory,
+    private Clock $clock,
   )
   {
     parent::__construct();
@@ -31,15 +32,13 @@ class AmqpCommands extends DrushCommands
   /**
    * @command amqp:simple-queue-test
    */
-  public function simpleQueueTest(string $stampTime = null)
+  public function simpleQueueTest()
   {
-    $stampDateTime = new DateTimePlus($stampTime ?? 'now');
-
     $queue = $this->queueFactory->getQueue('simple-queue');
-    $queue->queue(AMQPEnvelope::fromContentAndDate('test one', $stampDateTime));
+    $queue->queue(AMQPEnvelope::fromContentAndDate('test one', $this->clock->getCurrentDateTimeImmutable()));
     $queue->queueBatch([
-      AMQPEnvelope::fromContentAndDate('test batch one', $stampDateTime),
-      AMQPEnvelope::fromContentAndDate('test batch two', $stampDateTime),
+      AMQPEnvelope::fromContentAndDate('test batch one', $this->clock->getCurrentDateTimeImmutable()),
+      AMQPEnvelope::fromContentAndDate('test batch two', $this->clock->getCurrentDateTimeImmutable()),
     ]);
   }
 }

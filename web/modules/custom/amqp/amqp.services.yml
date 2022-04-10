@@ -1,6 +1,9 @@
 services:
+  Symfony\Component\Console\Output\OutputInterface:
+    class: 'Symfony\Component\Console\Output\ConsoleOutput'
+
   Drupal\amqp\ConsoleLogger:
-    factory: 'Drupal\amqp\ConsoleLogger::create'
+    autowire: true
 
   Drupal\amqp\AMQPStreamConnectionFactory:
     autowire: true
@@ -11,6 +14,10 @@ services:
     autowire: true
 
   Drupal\amqp\Consumer:
+    autowire: true
+
+  Drupal\amqp\Clock\Clock:
+    class: 'Drupal\amqp\Clock\SystemClock'
     autowire: true
 
   Drupal\amqp\Worker\SimpleQueueWorker:

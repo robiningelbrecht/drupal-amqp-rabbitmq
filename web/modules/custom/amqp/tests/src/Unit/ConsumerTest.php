@@ -8,7 +8,6 @@ use Drupal\amqp\ConsoleLogger;
 use Drupal\amqp\Consumer;
 use Drupal\amqp\Queue\Queue;
 use Drupal\amqp\Worker\WorkerMaxLifeTimeOrIterationsExceeded;
-use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Tests\UnitTestCase;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -31,7 +30,7 @@ class ConsumerTest extends UnitTestCase
     $queue
       ->expects($this->once())
       ->method('getWorker')
-      ->willReturn(new TestWorker(new DateTimePlus('2022-04-10 01:11:14')));
+      ->willReturn(new TestWorker(new \DateTimeImmutable('2022-04-10 01:11:14')));
 
     $this->logger
       ->expects($this->exactly(5))
@@ -91,7 +90,7 @@ class ConsumerTest extends UnitTestCase
     $queue
       ->expects($this->once())
       ->method('getWorker')
-      ->willReturn(new TestWorker(new DateTimePlus()));
+      ->willReturn(new TestWorker(new \DateTimeImmutable()));
 
     $this->logger
       ->expects($this->exactly(5))

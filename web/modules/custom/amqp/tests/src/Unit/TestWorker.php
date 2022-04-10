@@ -5,18 +5,16 @@ namespace Drupal\Tests\amqp\Unit;
 use Drupal\amqp\Envelope\Envelope;
 use Drupal\amqp\Queue\Queue;
 use Drupal\amqp\Worker\Worker;
-use Drupal\Component\Datetime\DateTimePlus;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class TestWorker implements Worker
 {
   private const MAX_LIFE_TIME_INTERVAL = 'PT1H';
-  private const MAX_ITERATIONS = 100000;
 
   private int $counter = 0;
 
   public function __construct(
-    private DateTimePlus $maxLifeTimeDateTime
+    private \DateTimeImmutable $maxLifeTimeDateTime
   )
   {
   }
@@ -43,15 +41,15 @@ class TestWorker implements Worker
 
   public function maxLifeTimeReached(): bool
   {
-    return new DateTimePlus('now') >= $this->maxLifeTimeDateTime;
+    return new \DateTimeImmutable('now') >= $this->maxLifeTimeDateTime;
   }
 
   public function getMaxIterations(): int
   {
-    return self::MAX_ITERATIONS;
+    return 2;
   }
 
-  public function getMaxLifeTime(): DateTimePlus
+  public function getMaxLifeTime(): \DateTimeImmutable
   {
     return $this->maxLifeTimeDateTime;
   }

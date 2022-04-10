@@ -1,1 +1,1 @@
- [08:11] <fg=white;bg=red;options=bold>[error]</fg=white;bg=red;options=bold>     Logging for level 3
+ [20:10:04] <fg=white;bg=red;options=bold>[error]</fg=white;bg=red;options=bold>     Logging for level 3

@@ -2,19 +2,25 @@
 
 namespace Drupal\amqp\Worker;
 
-use Drupal\Component\Datetime\DateTimePlus;
+use Drupal\amqp\Clock\Clock;
 
 abstract class BaseWorker implements Worker
 {
   private const MAX_LIFE_TIME_INTERVAL = 'PT1H';
-  private const MAX_ITERATIONS = 100000;
 
   private int $counter = 0;
-  private DateTimePlus $maxLifeTimeDateTime;
+  private \DateTimeImmutable $maxLifeTimeDateTime;
 
-  public function __construct()
+  public function __construct(
+    private Clock $clock
+  )
   {
-    $this->maxLifeTimeDateTime = (new DateTimePlus('now'))->add($this->getMaxLifeTimeInterval());
+    $this->maxLifeTimeDateTime = $this->clock->getCurrentDateTimeImmutable()->add($this->getMaxLifeTimeInterval());
+  }
+
+  public function getMaxIterations(): int
+  {
+    return 1000;
   }
 
   public function maxIterationsReached(): bool
@@ -22,17 +28,7 @@ abstract class BaseWorker implements Worker
     return $this->counter++ >= $this->getMaxIterations();
   }
 
-  public function maxLifeTimeReached(): bool
-  {
-    return new DateTimePlus('now') >= $this->maxLifeTimeDateTime;
-  }
-
-  public function getMaxIterations(): int
-  {
-    return self::MAX_ITERATIONS;
-  }
-
-  public function getMaxLifeTime(): DateTimePlus
+  public function getMaxLifeTime(): \DateTimeImmutable
   {
     return $this->maxLifeTimeDateTime;
   }
@@ -40,5 +36,10 @@ abstract class BaseWorker implements Worker
   public function getMaxLifeTimeInterval(): \DateInterval
   {
     return new \DateInterval(self::MAX_LIFE_TIME_INTERVAL);
+  }
+
+  public function maxLifeTimeReached(): bool
+  {
+    return $this->clock->getCurrentDateTimeImmutable() >= $this->maxLifeTimeDateTime;
   }
 }

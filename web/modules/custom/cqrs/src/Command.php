@@ -11,12 +11,12 @@ abstract class Command implements Envelope
   use MetadataAware;
 
   public function __construct(
-    private DateTimePlus $stampTime,
+    private \DateTimeImmutable $stampTime,
   )
   {
   }
 
-  public function getStampTime(): DateTimePlus
+  public function getStampTime(): \DateTimeImmutable
   {
     return $this->stampTime;
   }
