@@ -4,7 +4,6 @@ namespace Drupal\Tests\cqrs\Unit;
 
 use Drupal\amqp\Clock\PausedClock;
 use Drupal\amqp\ConsoleLogger;
-use Drupal\cqrs\Command;
 use Drupal\cqrs\CommandDispatcher;
 use Drupal\cqrs\CommandQueue\FailedCommandQueue;
 use Drupal\cqrs\CommandQueue\FailedCommandQueueFactory;
@@ -13,11 +12,9 @@ use Drupal\Tests\amqp\Unit\TestQueue;
 use Drupal\Tests\UnitTestCase;
 use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit\Framework\MockObject\MockObject;
-use Spatie\Snapshots\MatchesSnapshots;
 
 class CommandQueueWorkerTest extends UnitTestCase
 {
-  Use MatchesSnapshots;
 
   private CommandQueueWorker $commandQueueWorker;
   private MockObject $commandDispatcher;
@@ -64,10 +61,7 @@ class CommandQueueWorkerTest extends UnitTestCase
 
     $failedQueue
       ->expects($this->once())
-      ->method('queue')
-      ->willReturnCallback(function(Command $command){
-        $this->assertMatchesTextSnapshot(serialize($command));
-      });
+      ->method('queue');
 
     $this->commandQueueWorker->processFailure($command, $message, new \RuntimeException('FAIL'), $queue);
   }
