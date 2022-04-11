@@ -37,9 +37,5 @@ class CommandHandlerFactory
     if (!class_exists($commandFqcn)) {
       throw new CanNotRegisterCommandHandler(sprintf('No corresponding command for commandHandler "%s" found', $commandHandler::class));
     }
-
-    if (str_ends_with($commandFqcn, 'Command')) {
-      throw new CanNotRegisterCommandHandler(sprintf('Command class names should not end in "Command", "%s" given', $commandFqcn));
-    }
   }
 }
