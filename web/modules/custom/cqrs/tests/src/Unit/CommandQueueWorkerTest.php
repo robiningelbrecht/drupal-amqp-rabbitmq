@@ -4,9 +4,9 @@ namespace Drupal\Tests\cqrs\Unit;
 
 use Drupal\amqp\Clock\PausedClock;
 use Drupal\amqp\ConsoleLogger;
+use Drupal\amqp\Queue\FailedQueue\FailedQueue;
+use Drupal\amqp\Queue\FailedQueue\FailedQueueFactory;
 use Drupal\cqrs\CommandDispatcher;
-use Drupal\cqrs\CommandQueue\FailedCommandQueue;
-use Drupal\cqrs\CommandQueue\FailedCommandQueueFactory;
 use Drupal\cqrs\CommandQueueWorker;
 use Drupal\Tests\amqp\Unit\TestQueue;
 use Drupal\Tests\UnitTestCase;
@@ -18,7 +18,7 @@ class CommandQueueWorkerTest extends UnitTestCase
 
   private CommandQueueWorker $commandQueueWorker;
   private MockObject $commandDispatcher;
-  private MockObject $failedCommandQueueFactory;
+  private MockObject $failedQueueFactory;
   private MockObject $logger;
 
   public function testProcessMessage(): void
@@ -47,8 +47,8 @@ class CommandQueueWorkerTest extends UnitTestCase
     $properties = ['content_type' => 'text/plain', 'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT];
     $message = new AMQPMessage(serialize($command), $properties);
 
-    $failedQueue = $this->createMock(FailedCommandQueue::class);
-    $this->failedCommandQueueFactory
+    $failedQueue = $this->createMock(FailedQueue::class);
+    $this->failedQueueFactory
       ->expects($this->once())
       ->method('buildFor')
       ->with($queue)
@@ -71,12 +71,12 @@ class CommandQueueWorkerTest extends UnitTestCase
     parent::setUp();
 
     $this->commandDispatcher = $this->createMock(CommandDispatcher::class);
-    $this->failedCommandQueueFactory = $this->createMock(FailedCommandQueueFactory::class);
+    $this->failedQueueFactory = $this->createMock(FailedQueueFactory::class);
     $this->logger = $this->createMock(ConsoleLogger::class);
 
     $this->commandQueueWorker = new CommandQueueWorker(
       $this->commandDispatcher,
-      $this->failedCommandQueueFactory,
+      $this->failedQueueFactory,
       $this->logger,
       PausedClock::on(new \DateTimeImmutable('2022-04-11 08:09:22')),
     );

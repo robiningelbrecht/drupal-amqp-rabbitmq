@@ -32,3 +32,7 @@ services:
     autowire: true
     tags:
       - { name: amqp_queue }
+
+  Drupal\amqp\Queue\FailedQueue\FailedQueueFactory:
+    autowire: true
+

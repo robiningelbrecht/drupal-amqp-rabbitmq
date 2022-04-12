@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\cqrs\CommandQueue;
+namespace Drupal\amqp\Queue\FailedQueue;
 
 use Drupal\amqp\AMQPChannelFactory;
 use Drupal\amqp\Queue\Queue;
 
-class FailedCommandQueueFactory
+class FailedQueueFactory
 {
   public function __construct(
     private AMQPChannelFactory $AMQPChannelFactory,
@@ -14,8 +14,8 @@ class FailedCommandQueueFactory
 
   }
 
-  public function buildFor(Queue $queue): FailedCommandQueue{
-    return new FailedCommandQueue(
+  public function buildFor(Queue $queue): FailedQueue{
+    return new FailedQueue(
       $queue,
       $this->AMQPChannelFactory
     );

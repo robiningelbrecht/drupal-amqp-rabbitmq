@@ -10,9 +10,6 @@ services:
     tags:
       - { name: service_collector, tag: cqrs_command_handler, call: registerCommandHandler }
 
-  Drupal\cqrs\CommandQueue\FailedCommandQueueFactory:
-    autowire: true
-
   Drupal\cqrs\CommandQueue\GeneralCommandQueue:
     autowire: true
     tags:

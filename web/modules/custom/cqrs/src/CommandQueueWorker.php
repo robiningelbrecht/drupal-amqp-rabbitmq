@@ -5,16 +5,16 @@ namespace Drupal\cqrs;
 use Drupal\amqp\Clock\Clock;
 use Drupal\amqp\ConsoleLogger;
 use Drupal\amqp\Envelope\Envelope;
+use Drupal\amqp\Queue\FailedQueue\FailedQueueFactory;
 use Drupal\amqp\Queue\Queue;
 use Drupal\amqp\Worker\BaseWorker;
-use Drupal\cqrs\CommandQueue\FailedCommandQueueFactory;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class CommandQueueWorker extends BaseWorker
 {
   public function __construct(
     private CommandDispatcher $commandDispatcher,
-    private FailedCommandQueueFactory $failedCommandQueueFactory,
+    private FailedQueueFactory $failedQueueFactory,
     private ConsoleLogger $logger,
     Clock $clock
   )
@@ -48,7 +48,7 @@ class CommandQueueWorker extends BaseWorker
       'traceAsString' => $exception->getTraceAsString(),
     ]);
 
-    $failedQueue = $this->failedCommandQueueFactory->buildFor($queue);
+    $failedQueue = $this->failedQueueFactory->buildFor($queue);
     $this->logger->warning(sprintf('Message has been send to failed queue "%s"', $failedQueue->getName()));
 
     $failedQueue->queue($command);

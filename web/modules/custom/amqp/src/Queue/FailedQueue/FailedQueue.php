@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\cqrs\CommandQueue;
+namespace Drupal\amqp\Queue\FailedQueue;
 
 use Drupal\amqp\AMQPChannelFactory;
 use Drupal\amqp\Queue\BaseQueue;
 use Drupal\amqp\Queue\Queue;
 use Drupal\amqp\Worker\Worker;
 
-class FailedCommandQueue extends BaseQueue
+class FailedQueue extends BaseQueue
 {
   public function __construct(
     private Queue $queue,
@@ -24,7 +24,7 @@ class FailedCommandQueue extends BaseQueue
 
   public function getWorker(): Worker
   {
-    throw new \RuntimeException('Failed command queues do not have workers');
+    throw new \RuntimeException('Failed queues do not have workers');
   }
 
 }
