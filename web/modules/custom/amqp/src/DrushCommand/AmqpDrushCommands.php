@@ -8,7 +8,7 @@ use Drupal\amqp\Envelope\AMQPEnvelope;
 use Drupal\amqp\Queue\QueueFactory;
 use Drush\Commands\DrushCommands;
 
-class AmqpCommands extends DrushCommands
+class AmqpDrushCommands extends DrushCommands
 {
 
   public function __construct(

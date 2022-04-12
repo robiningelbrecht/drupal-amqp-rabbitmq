@@ -5,7 +5,7 @@ namespace Drupal\Tests\amqp\Unit\DrushCommand;
 use Drupal\amqp\Clock\Clock;
 use Drupal\amqp\Clock\PausedClock;
 use Drupal\amqp\Consumer;
-use Drupal\amqp\DrushCommand\AmqpCommands;
+use Drupal\amqp\DrushCommand\AmqpDrushCommands;
 use Drupal\amqp\Envelope\AMQPEnvelope;
 use Drupal\amqp\Queue\Queue;
 use Drupal\amqp\Queue\QueueFactory;
@@ -13,9 +13,9 @@ use Drupal\Tests\amqp\Unit\TestQueue;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class AmqpCommandsTest extends UnitTestCase
+class AmqpDrushCommandsTest extends UnitTestCase
 {
-  private AmqpCommands $amqpCommands;
+  private AmqpDrushCommands $amqpDrushCommands;
   private MockObject $consumer;
   private MockObject $queueFactory;
   private Clock $clock;
@@ -36,7 +36,7 @@ class AmqpCommandsTest extends UnitTestCase
       ->method('consume')
       ->with($queue);
 
-    $this->amqpCommands->consume($queueName);
+    $this->amqpDrushCommands->consume($queueName);
   }
 
   public function testSimpleQueueTest(): void
@@ -62,7 +62,7 @@ class AmqpCommandsTest extends UnitTestCase
         AMQPEnvelope::fromContentAndDate('test batch two', $this->clock->getCurrentDateTimeImmutable()),
       ]);
 
-    $this->amqpCommands->simpleQueueTest();
+    $this->amqpDrushCommands->simpleQueueTest();
   }
 
   protected function setUp()
@@ -73,7 +73,7 @@ class AmqpCommandsTest extends UnitTestCase
     $this->queueFactory = $this->createMock(QueueFactory::class);
     $this->clock = PausedClock::on(new \DateTimeImmutable('2022-04-10 20:10:04'));
 
-    $this->amqpCommands = new AmqpCommands(
+    $this->amqpDrushCommands = new AmqpDrushCommands(
       $this->consumer,
       $this->queueFactory,
       $this->clock
