@@ -3,3 +3,8 @@ services:
     autowire: true
     tags:
       - { name: cqrs_command_handler }
+
+  # Services from Drupal core.
+  # We expose them again, so we can auto wire this crap.
+  Drupal\Core\Logger\LoggerChannelFactory:
+    parent: logger.factory
