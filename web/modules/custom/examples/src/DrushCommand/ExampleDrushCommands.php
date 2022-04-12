@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\domain\DrushCommand;
+namespace Drupal\examples\DrushCommand;
 
 use Drupal\amqp\Queue\QueueFactory;
-use Drupal\domain\AddDatabaseLog\AddDatabaseLog;
+use Drupal\examples\AddDatabaseLog\AddDatabaseLog;
 use Drush\Commands\DrushCommands;
 
-class DomainDrushCommands extends DrushCommands
+class ExampleDrushCommands extends DrushCommands
 {
 
   public function __construct(
@@ -17,7 +17,7 @@ class DomainDrushCommands extends DrushCommands
   }
 
   /**
-   * @command domain:general-command-queue-test
+   * @command examples:general-command-queue-test
    */
   public function generalCommandQueueTest()
   {

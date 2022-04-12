@@ -1,5 +1,5 @@
 services:
-  Drupal\domain\AddDatabaseLog\AddDatabaseLogCommandHandler:
+  Drupal\examples\AddDatabaseLog\AddDatabaseLogCommandHandler:
     autowire: true
     tags:
       - { name: cqrs_command_handler }

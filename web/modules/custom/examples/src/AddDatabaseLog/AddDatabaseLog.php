@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\domain\AddDatabaseLog;
+namespace Drupal\examples\AddDatabaseLog;
 
 use Drupal\cqrs\Command;
 

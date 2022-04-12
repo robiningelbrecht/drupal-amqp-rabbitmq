@@ -1,0 +1,7 @@
+name: Examples
+type: module
+description: 'Contains examples on how to use the Qs and commands'
+core_version_requirement: ^9
+php: 8.0
+dependencies:
+  cqrs:cqrs
