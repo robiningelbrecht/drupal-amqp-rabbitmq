@@ -31,7 +31,7 @@ class SimpleQueueTest extends UnitTestCase
     $this->AMQPChannelFactory
       ->expects($this->once())
       ->method('getForQueue')
-      ->with($this->simpleQueue)
+      ->with($this->simpleQueue, null)
       ->willReturn($channel);
 
     $properties = ['content_type' => 'text/plain', 'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT];
@@ -53,7 +53,7 @@ class SimpleQueueTest extends UnitTestCase
     $this->AMQPChannelFactory
       ->expects($this->once())
       ->method('getForQueue')
-      ->with($this->simpleQueue)
+      ->with($this->simpleQueue, null)
       ->willReturn($channel);
 
     $properties = ['content_type' => 'text/plain', 'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT];

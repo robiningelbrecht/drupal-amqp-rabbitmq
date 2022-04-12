@@ -1,6 +1,6 @@
 services:
   amqp.commands:
-    class: '\Drupal\amqp\DrushCommand\AmqpCommands'
+    class: '\Drupal\amqp\DrushCommand\AmqpDrushCommands'
     autowire: true
     tags:
       - { name: drush.command }

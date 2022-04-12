@@ -16,24 +16,27 @@ class AMQPChannelFactory
 
   }
 
-  public function getForQueue(Queue $queue): AMQPChannel
+  public function getForQueue(Queue $queue, AMQPChannelOptions $options = null): AMQPChannel
   {
     if (!array_key_exists($queue->getName(), $this->channels)) {
       $this->channels[$queue->getName()] = $this->AMQPStreamConnectionFactory->get()->channel();
 
-      /*
-       * name: $queue
-       * passive: false
-       * durable: true // the queue will survive server restarts
-       * exclusive: false // the queue can be accessed in other channels
-       * auto_delete: false //the queue won't be deleted once the channel is closed.
-       */
-      $this->channels[$queue->getName()]->queue_declare($queue->getName(), false, true, false, false);
+      $options = $options ?? AMQPChannelOptions::default();
+
+      $this->channels[$queue->getName()]->queue_declare(
+        $queue->getName(),
+        $options->isPassive(),
+        $options->isDurable(),
+        $options->isExclusive(),
+        $options->isAutoDelete(),
+        $options->isNowait(),
+        $options->getArguments(),
+        $options->getTicket()
+      );
       $this->channels[$queue->getName()]->basic_qos(null, 1, null);
     }
 
     return $this->channels[$queue->getName()];
   }
-
 
 }

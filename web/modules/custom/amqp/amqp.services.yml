@@ -33,6 +33,9 @@ services:
     tags:
       - { name: amqp_queue }
 
+  Drupal\amqp\Queue\DelayedQueue\DelayedQueueFactory:
+    autowire: true
+
   Drupal\amqp\Queue\FailedQueue\FailedQueueFactory:
     autowire: true
 
