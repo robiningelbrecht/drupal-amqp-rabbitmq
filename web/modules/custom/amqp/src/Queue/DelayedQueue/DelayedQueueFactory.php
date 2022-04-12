@@ -16,10 +16,6 @@ class DelayedQueueFactory
 
   public function buildWithDelay(int $delayInSeconds, Queue $queue): DelayedQueue
   {
-    if (!is_subclass_of($queue, SupportsDelay::class)) {
-      throw new \InvalidArgumentException('This queue does not support delayed queueing');
-    }
-
     return new DelayedQueue(
       $queue,
       $delayInSeconds,

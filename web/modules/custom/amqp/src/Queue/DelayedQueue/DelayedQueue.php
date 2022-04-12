@@ -20,6 +20,9 @@ class DelayedQueue extends BaseQueue
     private AMQPChannelFactory $AMQPChannelFactory
   )
   {
+    if (!is_subclass_of($this->queue, SupportsDelay::class)) {
+      throw new \InvalidArgumentException('This queue does not support delayed queueing');
+    }
     if ($this->delayInSeconds < 1) {
       throw new \InvalidArgumentException('Delay cannot be less than 1 second');
     }
