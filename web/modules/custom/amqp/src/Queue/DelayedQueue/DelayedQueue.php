@@ -21,7 +21,7 @@ class DelayedQueue extends BaseQueue
   )
   {
     if (!is_subclass_of($this->queue, SupportsDelay::class)) {
-      throw new \InvalidArgumentException('This queue does not support delayed queueing');
+      throw new \InvalidArgumentException(sprintf('Queue "%s" does not support delayed queueing', $this->queue->getName()));
     }
     if ($this->delayInSeconds < 1) {
       throw new \InvalidArgumentException('Delay cannot be less than 1 second');
