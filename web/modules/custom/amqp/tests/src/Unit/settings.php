@@ -6,4 +6,5 @@ $settings['amqp_credentials'] = [
   'username' => 'guest',
   'password' => 'guest',
   'vhost' => '/',
+  'api' => 'http://rabbit.lndo.site/',
 ];

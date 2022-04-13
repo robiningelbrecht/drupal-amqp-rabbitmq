@@ -4,6 +4,7 @@ namespace Drupal\Tests\amqp\Unit\Queue\DelayedQueue;
 
 use Drupal\amqp\AMQPChannelFactory;
 use Drupal\amqp\AMQPChannelOptions;
+use Drupal\amqp\AMQPClient;
 use Drupal\amqp\Envelope\AMQPEnvelope;
 use Drupal\amqp\Queue\DelayedQueue\DelayedQueue;
 use Drupal\Tests\amqp\Unit\TestQueue;
@@ -13,13 +14,27 @@ use PHPUnit\Framework\MockObject\MockObject;
 class DelayedQueueTest extends UnitTestCase
 {
   private MockObject $AMQPChannelFactory;
+  private MockObject $AMQPClient;
 
   public function testGetName(): void
   {
+    $this->AMQPClient
+      ->expects($this->once())
+      ->method('getExchangeBindings')
+      ->with('dlx')
+      ->willReturn([
+        [
+          'destination' => 'test-queue',
+          'routing_key' => 'test-queue',
+          'destination_type' => 'queue',
+        ],
+      ]);
+
     $delayedQueue = new DelayedQueue(
-      new TestDelayedQueue(),
+      new TestQueue(),
       10,
-      $this->AMQPChannelFactory
+      $this->AMQPChannelFactory,
+      $this->AMQPClient
     );
 
     $this->assertEquals('delayed-10s-test-queue', $delayedQueue->getName());
@@ -27,10 +42,23 @@ class DelayedQueueTest extends UnitTestCase
 
   public function testQueue(): void
   {
+    $this->AMQPClient
+      ->expects($this->once())
+      ->method('getExchangeBindings')
+      ->with('dlx')
+      ->willReturn([
+        [
+          'destination' => 'test-queue',
+          'routing_key' => 'test-queue',
+          'destination_type' => 'queue',
+        ],
+      ]);
+
     $delayedQueue = new DelayedQueue(
-      new TestDelayedQueue(),
+      new TestQueue(),
       10,
-      $this->AMQPChannelFactory
+      $this->AMQPChannelFactory,
+      $this->AMQPClient
     );
 
     $options = new AMQPChannelOptions(false, true, false, false, false, [
@@ -53,10 +81,23 @@ class DelayedQueueTest extends UnitTestCase
 
   public function testGetWorker(): void
   {
+    $this->AMQPClient
+      ->expects($this->once())
+      ->method('getExchangeBindings')
+      ->with('dlx')
+      ->willReturn([
+        [
+          'destination' => 'test-queue',
+          'routing_key' => 'test-queue',
+          'destination_type' => 'queue',
+        ],
+      ]);
+
     $delayedQueue = new DelayedQueue(
-      new TestDelayedQueue(),
+      new TestQueue(),
       10,
-      $this->AMQPChannelFactory
+      $this->AMQPChannelFactory,
+      $this->AMQPClient
     );
 
     $this->expectException(\RuntimeException::class);
@@ -68,12 +109,25 @@ class DelayedQueueTest extends UnitTestCase
   public function testItShouldThrowOnInvalidQueue(): void
   {
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('Queue "test-queue" does not support delayed queueing');
+    $this->expectExceptionMessage('Queue "test-queue" does not support delayed queueing. Make sure the exchange "dlx" has a binding with a routing key and a destination "test-queue"');
+
+    $this->AMQPClient
+      ->expects($this->once())
+      ->method('getExchangeBindings')
+      ->with('dlx')
+      ->willReturn([
+        [
+          'destination' => 'test-delayed-queue',
+          'routing_key' => 'test-delayed-queue',
+          'destination_type' => 'queue',
+        ],
+      ]);
 
     new DelayedQueue(
       new TestQueue(),
       10,
-      $this->AMQPChannelFactory
+      $this->AMQPChannelFactory,
+      $this->AMQPClient
     );
   }
 
@@ -82,10 +136,23 @@ class DelayedQueueTest extends UnitTestCase
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('Delay cannot be less than 1 second');
 
+    $this->AMQPClient
+      ->expects($this->once())
+      ->method('getExchangeBindings')
+      ->with('dlx')
+      ->willReturn([
+        [
+          'destination' => 'test-queue',
+          'routing_key' => 'test-queue',
+          'destination_type' => 'queue',
+        ],
+      ]);
+
     new DelayedQueue(
-      new TestDelayedQueue(),
+      new TestQueue(),
       0,
-      $this->AMQPChannelFactory
+      $this->AMQPChannelFactory,
+      $this->AMQPClient
     );
   }
 
@@ -94,5 +161,6 @@ class DelayedQueueTest extends UnitTestCase
     parent::setUp();
 
     $this->AMQPChannelFactory = $this->createMock(AMQPChannelFactory::class);
+    $this->AMQPClient = $this->createMock(AMQPClient::class);
   }
 }

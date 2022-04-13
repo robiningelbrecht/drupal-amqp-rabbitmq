@@ -5,10 +5,11 @@ services:
   Drupal\amqp\ConsoleLogger:
     autowire: true
 
+  Drupal\amqp\AMQPClient:
+    autowire: true
+
   Drupal\amqp\AMQPStreamConnectionFactory:
     autowire: true
-    arguments:
-      - '@settings'
 
   Drupal\amqp\AMQPChannelFactory:
     autowire: true
@@ -38,4 +39,12 @@ services:
 
   Drupal\amqp\Queue\FailedQueue\FailedQueueFactory:
     autowire: true
+
+  # Services from Drupal core.
+  # We expose them again, so we can auto wire this crap.
+  Drupal\Core\Site\Settings:
+    parent: settings
+
+  Drupal\Core\Http\ClientFactory:
+    parent: http_client_factory
 

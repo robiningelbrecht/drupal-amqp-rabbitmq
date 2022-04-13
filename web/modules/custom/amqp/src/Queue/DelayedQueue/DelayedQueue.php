@@ -4,6 +4,7 @@ namespace Drupal\amqp\Queue\DelayedQueue;
 
 use Drupal\amqp\AMQPChannelFactory;
 use Drupal\amqp\AMQPChannelOptions;
+use Drupal\amqp\AMQPClient;
 use Drupal\amqp\Queue\BaseQueue;
 use Drupal\amqp\Queue\Queue;
 use Drupal\amqp\Worker\Worker;
@@ -17,12 +18,12 @@ class DelayedQueue extends BaseQueue
   public function __construct(
     private Queue $queue,
     private int $delayInSeconds,
-    private AMQPChannelFactory $AMQPChannelFactory
+    private AMQPChannelFactory $AMQPChannelFactory,
+    private AMQPClient $AMQPClient,
   )
   {
-    if (!is_subclass_of($this->queue, SupportsDelay::class)) {
-      throw new \InvalidArgumentException(sprintf('Queue "%s" does not support delayed queueing', $this->queue->getName()));
-    }
+    $this->guardThatExchangeHasBindingForQueue();
+
     if ($this->delayInSeconds < 1) {
       throw new \InvalidArgumentException('Delay cannot be less than 1 second');
     }
@@ -48,6 +49,28 @@ class DelayedQueue extends BaseQueue
       'x-expires' => ['I', $this->delayInSeconds * 1000 + 100000], // Keep the Q for 100s after the last message,
     ]);
     return $this->AMQPChannelFactory->getForQueue($this, $options);
+  }
+
+  private function guardThatExchangeHasBindingForQueue(): void
+  {
+    $bindings = $this->AMQPClient->getExchangeBindings(self::X_DEAD_LETTER_EXCHANGE);
+
+    foreach ($bindings as $binding) {
+      if ($binding['destination'] === $this->queue->getName()
+        && $binding['routing_key'] === $this->queue->getName()
+        && $binding['destination_type'] === 'queue') {
+        return;
+      }
+    }
+
+    // Make sure that every Q that implements this interface, is defined as a binding on the DLX exchange.
+    // Routing key of the binding has to be the command queue name to where it has to be routed.
+    throw new \InvalidArgumentException(sprintf(
+      'Queue "%s" does not support delayed queueing. Make sure the exchange "%s" has a binding with a routing key and a destination "%s"',
+      $this->queue->getName(),
+      self::X_DEAD_LETTER_EXCHANGE,
+      $this->queue->getName()
+    ));
   }
 
 }

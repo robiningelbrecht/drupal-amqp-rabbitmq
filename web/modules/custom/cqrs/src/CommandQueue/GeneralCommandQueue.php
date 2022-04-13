@@ -2,9 +2,7 @@
 
 namespace Drupal\cqrs\CommandQueue;
 
-use Drupal\amqp\Queue\DelayedQueue\SupportsDelay;
-
-class GeneralCommandQueue extends CommandQueue implements SupportsDelay
+class GeneralCommandQueue extends CommandQueue
 {
 
   public function getName(): string

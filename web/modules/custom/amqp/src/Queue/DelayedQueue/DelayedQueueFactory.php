@@ -3,6 +3,7 @@
 namespace Drupal\amqp\Queue\DelayedQueue;
 
 use Drupal\amqp\AMQPChannelFactory;
+use Drupal\amqp\AMQPClient;
 use Drupal\amqp\Queue\Queue;
 
 class DelayedQueueFactory
@@ -10,6 +11,7 @@ class DelayedQueueFactory
 
   public function __construct(
     private AMQPChannelFactory $AMQPChannelFactory,
+    private AMQPClient $AMQPClient,
   )
   {
   }
@@ -19,7 +21,8 @@ class DelayedQueueFactory
     return new DelayedQueue(
       $queue,
       $delayInSeconds,
-      $this->AMQPChannelFactory
+      $this->AMQPChannelFactory,
+      $this->AMQPClient
     );
   }
 }
