@@ -12,3 +12,22 @@
 </p>
 
 ------
+
+Define a new Q:
+
+```yaml
+  Drupal\your_module\Queue\NewQueue:
+    autowire: true
+    tags:
+      - { name: amqp_queue }
+```
+
+Define a new Command with CommandHandler:
+
+
+```yaml
+  Drupal\your_module\DoSomething\DoSomethingCommandHandler:
+    autowire: true
+    tags:
+      - { name: cqrs_command_handler }
+```
