@@ -13,6 +13,8 @@
 
 ------
 
+@TODO: Explain consumer vs queue vs worker
+
 Define a new Q:
 
 ```yaml
@@ -30,4 +32,16 @@ Define a new Command with CommandHandler:
     autowire: true
     tags:
       - { name: cqrs_command_handler }
+```
+
+Use a delayed Q to postpone consuming a message:
+
+```php
+  $this->delayedQueueFactory->buildWithDelayForQueue(10, $queue)->queue($message);
+```
+
+Push a message to it's corresponding failed Q:
+
+```php
+  $this->failedQueueFactory->buildFor($queue)->queue(message);
 ```
