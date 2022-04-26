@@ -14,6 +14,8 @@
 ------
 
 @TODO: Explain consumer vs queue vs worker
+@TODO: Explain setup
+@TODO: Explain with a drawing? https://excalidraw.com/
 
 Define a new Q:
 
