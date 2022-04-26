@@ -48,13 +48,19 @@ $settings['amqp_credentials'] = [
 
 * Import the database dump by running `lando drush sql-cli < init.sql`
 
-@TODO: Explain consumer vs queue vs worker
+## The basic idea and setup
 
-@TODO: Explain setup
+There are basically 3 important terms to keep in mind:
 
-@TODO: Explain with a drawing? https://excalidraw.com/
+* **Worker**: A specific class that processes a message, also handles failures in case a message could not be processed
+* **Queue**: A class that represents a RabbitMQ queue, allows for messages to be pushed to the corresponding queue. Each queue is linked to a worker
+* **Consumer**: Process that consumes a specific queue and it's messages, each queue can have zero or more consumers
 
-Define a new Q:
+<img src="https://github.com/robiningelbrecht/drupal-amqp-rabbitmq/raw/master/readme/rmq-drupal.svg" alt="RabbitMQ">
+
+## Pushing messages and consuming them
+
+## Adding a new queue
 
 ```yaml
   Drupal\your_module\Queue\NewQueue:
@@ -63,7 +69,19 @@ Define a new Q:
       - { name: amqp_queue }
 ```
 
-Define a new Command with CommandHandler:
+### Use a delayed Q to postpone consuming a message:
+
+```php
+  $this->delayedQueueFactory->buildWithDelayForQueue(10, $queue)->queue($message);
+```
+
+### Push a message to it's corresponding failed Q:
+
+```php
+  $this->failedQueueFactory->buildFor($queue)->queue(message);
+```
+
+## Define a new CommandHandler:
 
 
 ```yaml
@@ -73,14 +91,4 @@ Define a new Command with CommandHandler:
       - { name: cqrs_command_handler }
 ```
 
-Use a delayed Q to postpone consuming a message:
-
-```php
-  $this->delayedQueueFactory->buildWithDelayForQueue(10, $queue)->queue($message);
-```
-
-Push a message to it's corresponding failed Q:
-
-```php
-  $this->failedQueueFactory->buildFor($queue)->queue(message);
-```
+## Real-time migration example
