@@ -56,9 +56,20 @@ There are basically 3 important terms to keep in mind:
 * **Queue**: A class that represents a RabbitMQ queue, allows for messages to be pushed to the corresponding queue. Each queue is linked to a worker
 * **Consumer**: Process that consumes a specific queue and it's messages, each queue can have zero or more consumers
 
+The `amqp` module provides a basic framework that allows you to 
+
+* Define queues and workers
+* Consume queues with a *drush* command
+* Push messages to queues with a *drush* command
+
 <img src="https://github.com/robiningelbrecht/drupal-amqp-rabbitmq/raw/master/readme/rmq-drupal.svg" alt="RabbitMQ">
 
 ## Pushing messages and consuming them
+
+The `amqp` module contains a `SimpleQueue` and a `SimpleQueueWorker`. Let's take a look
+at an example of pushing and consuming messages:
+
+@TODO: Add gif
 
 ## Adding a new queue
 
