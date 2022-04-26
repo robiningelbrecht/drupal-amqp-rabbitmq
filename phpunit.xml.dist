@@ -7,7 +7,8 @@
   </testsuites>
   <coverage processUncoveredFiles="true">
     <include>
-      <directory suffix=".php">web/modules/custom/**/src</directory>
+      <directory suffix=".php">web/modules/custom/amqp/src</directory>
+      <directory suffix=".php">web/modules/custom/cqrs/src</directory>
     </include>
   </coverage>
 </phpunit>
