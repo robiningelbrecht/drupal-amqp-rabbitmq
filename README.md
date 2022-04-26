@@ -22,7 +22,6 @@ This repository aims to illustrate how to setup AMQP within Drupal. It contains 
 * Run `lando start` to build the necessary docker containers
 * Run `lando composer install` to download vendor dependencies
 * Make sure following config is added to `settings.php`
-* Import the database dump by running `lando drush sql-cli < init.sql`
 
 ```php
 $databases['default']['default'] = [
@@ -38,7 +37,7 @@ $databases['default']['default'] = [
 $settings['config_sync_directory'] = '../config/sync';
 
 $settings['amqp_credentials'] = [
-  'host' => '172.21.0.3',
+  'host' => '172.21.0.3', // The AMQP host IP address is outputted n your CLI while running `lando start`
   'port' => '5672',
   'username' => 'guest',
   'password' => 'guest',
@@ -47,8 +46,7 @@ $settings['amqp_credentials'] = [
 ];
 ```
 
-__note__: The AMQP host IP address is outputted n your CLI while running `lando start`
-<img src="https://github.com/robiningelbrecht/drupal-amqp-rabbitmq/raw/master/readme/rmq-ip-address.png" alt="RabbitMQ">
+* Import the database dump by running `lando drush sql-cli < init.sql`
 
 @TODO: Explain consumer vs queue vs worker
 
