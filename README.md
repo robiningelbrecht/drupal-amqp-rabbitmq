@@ -139,17 +139,30 @@ In some more advanced use cases you might want to delay the consumption of messs
 You can achieve this by pushing the message to it's correspondng delayed queue:
 
 ```php
-  $this->delayedQueueFactory->buildWithDelayForQueue(10, $queue)->queue($message);
+  $this->delayedQueueFactory->buildWithDelayForQueue(15, $queue)->queue($message);
 ```
 
 For a delayed queue to work properly you'll have to do two things:
 
-* Add a new exchange that is named `dlx`
+* Add a new exchange with the name `dlx`
 * Make sure the queue is defined as a binding on the `dlx` exchange, where the
 routing key of the binding is the command queue name to where it has to be routed.
 
+<p align="center">
+	<img src="https://github.com/robiningelbrecht/drupal-amqp-rabbitmq/raw/master/readme/dlx-binding-example.png" width="400" alt="Dlx binding example">
+</p>
+
 ## Define a new CommandHandler
 
+I like to use Commands and CommandHandlers to persist changes to the database. That is basically what
+the `cqrs` module allows you to do. It provides a simple framework that 
+
+* Allows you to define new commands and their corresponding command handlers
+* Allows you to push messages to command queues
+* Provides a command worker and dispatcher to process the commands comming in from the different queues
+
+To add a new command (and command handler), just add a new entry to your `services.yml` 
+and tag it with `cqrs_command_handler`:
 
 ```yaml
   Drupal\your_module\DoSomething\DoSomethingCommandHandler:
