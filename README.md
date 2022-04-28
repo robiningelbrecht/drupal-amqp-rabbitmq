@@ -69,7 +69,7 @@ The `amqp` module provides a basic framework that allows you to
 The `amqp` module contains a `SimpleQueue` and a `SimpleQueueWorker`. Let's take a look
 at an example of pushing and consuming messages:
 
-@TODO: Add gif
+<img src="https://github.com/robiningelbrecht/drupal-amqp-rabbitmq/raw/master/readme/consume-push-example.gif" alt="Consume - Push example">
 
 ## Adding a new queue
 
