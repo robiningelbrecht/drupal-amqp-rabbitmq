@@ -37,7 +37,7 @@ $databases['default']['default'] = [
 $settings['config_sync_directory'] = '../config/sync';
 
 $settings['amqp_credentials'] = [
-  'host' => '172.21.0.3', // The AMQP host IP address is outputted n your CLI while running `lando start`
+  'host' => '172.21.0.3', // The AMQP host IP address is outputted in your CLI while running `lando start`
   'port' => '5672',
   'username' => 'guest',
   'password' => 'guest',
@@ -72,6 +72,23 @@ at an example of pushing and consuming messages:
 <img src="https://github.com/robiningelbrecht/drupal-amqp-rabbitmq/raw/master/readme/consume-push-example.gif" alt="Consume - Push example">
 
 ## Adding a new queue
+
+It's recommended to add a queue for each type of task, for example:
+
+* Sending out notifications: `send-notification-queue`
+* Migrating articles: `migrate-article-queue`
+* Calculate product prices: `calculate-product-price-queue`
+* ...
+
+This approach ensures that tasks of one type cannot block other ones. It also has the advantage 
+that you can log failed messages on the corresponding failed queues of each queue:
+
+* `send-notification-queue-failed`
+* `migrate-article-queue-failed`
+* `calculate-product-price-queue-failed`
+
+
+Declaring and adding 
 
 ```yaml
   Drupal\your_module\Queue\NewQueue:
