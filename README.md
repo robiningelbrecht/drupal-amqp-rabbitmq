@@ -102,6 +102,7 @@ Make sure this class extends `BaseQueue`, so you don't have to bother queueing m
 ### Push a message to it's corresponding failed Q
 
 If, fore some reason, a message could not be processed, you might want to log it somewhere.
+A "failed queue" could be a solution here.\
 To push a message to it's corresponding failed queue, you can use the `FailedQueueFactory`:
 
 ```php
@@ -124,11 +125,28 @@ This factory can for example be used in the `processFailure` callback of your wo
   }
 ```
 
+**note**: a failed queue has no worker attached to it, and thus, cannot be consumed. This means
+that the messages will stay on the queue until they are manually deletd.
+
 ### Use a delayed Q to postpone consuming a message
+
+In some more advanced use cases you might want to delay the consumption of messsages, for example: 
+
+* a digist mail that summarizes all content changes occured in the last 30 minutes
+* requeue a failed message automatically after 15 seconds
+* ...
+
+You can achieve this by pushing the message to it's correspondng delayed queue:
 
 ```php
   $this->delayedQueueFactory->buildWithDelayForQueue(10, $queue)->queue($message);
 ```
+
+For a delayed queue to work properly you'll have to do two things:
+
+* Add a new exchange that is named `dlx`
+* Make sure the queue is defined as a binding on the `dlx` exchange, where the
+routing key of the binding is the command queue name to where it has to be routed.
 
 ## Define a new CommandHandler
 
@@ -141,3 +159,5 @@ This factory can for example be used in the `processFailure` callback of your wo
 ```
 
 ## Real-time migration example
+
+## Run a consumer as a service in systemd
