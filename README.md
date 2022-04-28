@@ -99,19 +99,38 @@ To declare a new queue, just add a new entry to your `services.yml` and tag it w
 
 Make sure this class extends `BaseQueue`, so you don't have to bother queueing messages yourself.
 
-### Use a delayed Q to postpone consuming a message:
+### Push a message to it's corresponding failed Q
 
-```php
-  $this->delayedQueueFactory->buildWithDelayForQueue(10, $queue)->queue($message);
-```
-
-### Push a message to it's corresponding failed Q:
+If, fore some reason, a message could not be processed, you might want to log it somewhere.
+To push a message to it's corresponding failed queue, you can use the `FailedQueueFactory`:
 
 ```php
   $this->failedQueueFactory->buildFor($queue)->queue(message);
 ```
 
-## Define a new CommandHandler:
+This factory can for example be used in the `processFailure` callback of your worker:
+
+```php
+  public function processFailure(Envelope $envelope, AMQPMessage $message, \Throwable $exception, Queue $queue): void
+  {
+    /** @var Command $command */
+    $command = $envelope;
+    $command->setMetaData([
+      'exceptionMessage' => $exception->getMessage(),
+      'traceAsString' => $exception->getTraceAsString(),
+    ]);
+
+    $failedQueue = $this->failedQueueFactory->buildFor($queue)->queue($command);
+  }
+```
+
+### Use a delayed Q to postpone consuming a message
+
+```php
+  $this->delayedQueueFactory->buildWithDelayForQueue(10, $queue)->queue($message);
+```
+
+## Define a new CommandHandler
 
 
 ```yaml
