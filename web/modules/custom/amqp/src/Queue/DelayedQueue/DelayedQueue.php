@@ -63,7 +63,7 @@ class DelayedQueue extends BaseQueue
       }
     }
 
-    // Make sure that every Q that implements this interface, is defined as a binding on the DLX exchange.
+    // Make sure that every Q that needs a delay, is defined as a binding on the DLX exchange.
     // Routing key of the binding has to be the command queue name to where it has to be routed.
     throw new \InvalidArgumentException(sprintf(
       'Queue "%s" does not support delayed queueing. Make sure the exchange "%s" has a binding with a routing key and a destination "%s"',
