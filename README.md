@@ -88,7 +88,7 @@ that you can log failed messages on the corresponding failed queues of each queu
 * `calculate-product-price-queue-failed`
 
 
-Declaring and adding 
+To declare a new queue, just add a new entry to your `services.yml` and tag it with `ampq_queue`:
 
 ```yaml
   Drupal\your_module\Queue\NewQueue:
@@ -96,6 +96,8 @@ Declaring and adding
     tags:
       - { name: amqp_queue }
 ```
+
+Make sure this class extends `BaseQueue`, so you don't have to bother queueing messages yourself.
 
 ### Use a delayed Q to postpone consuming a message:
 
