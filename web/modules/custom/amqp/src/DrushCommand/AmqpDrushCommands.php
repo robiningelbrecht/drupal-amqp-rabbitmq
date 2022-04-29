@@ -36,9 +36,9 @@ class AmqpDrushCommands extends DrushCommands
   {
     $queue = $this->queueFactory->getQueue('simple-queue');
     $queue->queue(AMQPEnvelope::fromContentAndDate('test one', $this->clock->getCurrentDateTimeImmutable()));
-    /*$queue->queueBatch([
+    $queue->queueBatch([
       AMQPEnvelope::fromContentAndDate('test batch one', $this->clock->getCurrentDateTimeImmutable()),
       AMQPEnvelope::fromContentAndDate('test batch two', $this->clock->getCurrentDateTimeImmutable()),
-    ]);*/
+    ]);
   }
 }
