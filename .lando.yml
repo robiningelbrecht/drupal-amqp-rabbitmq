@@ -42,6 +42,9 @@ services:
       - echo "Installing PHP extensions..."
       - docker-php-ext-install sockets
       - docker-php-ext-enable sockets
+      - echo "Installing Supervisord"
+      - apt-get install pip -y
+      - pip install supervisor
 # Shows IP address on 'lando start'
 events:
   post-start:
@@ -66,3 +69,19 @@ tooling:
     cmd:
       - echo -e "\n\e[36mRABBITMQ IP ADDRESS:\e[32m"
       - hostname -i | cut -d' ' -f1
+  supervisord:
+    service: appserver
+    user: root
+    cmd: supervisord -c /app/supervisord/supervisord.conf
+  services-status:
+    service: appserver
+    user: root
+    cmd: supervisorctl -c /app/supervisord/supervisord.conf status
+  services-update:
+    service: appserver
+    user: root
+    cmd: supervisorctl -c /app/supervisord/supervisord.conf update
+  services-restart:
+    service: appserver
+    user: root
+    cmd: supervisorctl -c /app/supervisord/supervisord.conf restart all

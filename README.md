@@ -56,7 +56,7 @@ There are basically 3 important terms to keep in mind:
 * **Queue**: A class that represents a RabbitMQ queue, allows for messages to be pushed to the corresponding queue. Each queue is linked to a worker
 * **Consumer**: Process that consumes a specific queue and it's messages, each queue can have zero or more consumers
 
-The `amqp` module provides a basic framework that allows you to 
+The `amqp` module provides a basic framework that allows you to
 
 * Define queues and workers
 * Consume queues with a *drush* command
@@ -80,7 +80,7 @@ It's recommended to add a queue for each type of task, for example:
 * Calculate product prices: `calculate-product-price-queue`
 * ...
 
-This approach ensures that tasks of one type cannot block other ones. It also has the advantage 
+This approach ensures that tasks of one type cannot block other ones. It also has the advantage
 that you can log failed messages on the corresponding failed queues of each queue:
 
 * `send-notification-queue-failed`
@@ -130,7 +130,7 @@ that the messages will stay on the queue until they are manually deletd.
 
 ### Use a delayed Q to postpone consuming a message
 
-In some more advanced use cases you might want to delay the consumption of messsages, for example: 
+In some more advanced use cases you might want to delay the consumption of messsages, for example:
 
 * a digist mail that summarizes all content changes occured in the last 30 minutes
 * requeue a failed message automatically after 15 seconds
@@ -155,13 +155,13 @@ routing key of the binding is the command queue name to where it has to be route
 ## Define a new CommandHandler
 
 I like to use Commands and CommandHandlers to persist changes to the database. That is basically what
-the `cqrs` module allows you to do. It provides a simple framework that 
+the `cqrs` module allows is for. It provides a simple framework that
 
 * Allows you to define new commands and their corresponding command handlers
 * Allows you to push messages to command queues
 * Provides a command worker and dispatcher to process the commands comming in from the different queues
 
-To add a new command (and command handler), just add a new entry to your `services.yml` 
+To add a new command (and command handler), just add a new entry to your `services.yml`
 and tag it with `cqrs_command_handler`:
 
 ```yaml
