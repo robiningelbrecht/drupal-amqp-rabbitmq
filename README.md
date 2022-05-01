@@ -173,7 +173,7 @@ and tag it with `cqrs_command_handler`:
 
 ## Real-time migration example
 
-## Run a consumer as a background process
+## Run consumers as background processes
 
 Generally you want to run consumers as a background process and keep them "alive" for as long
 your server is up. This can be done using `systemd`, but I choose to use [supervisord](http://supervisord.org/)
