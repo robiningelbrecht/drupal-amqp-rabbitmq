@@ -50,7 +50,6 @@ class Consumer
         $message->getChannel()->basic_nack($message->getDeliveryTag(), false, true);
         throw $e;
       } catch (\Exception|\Error $exception) {
-        echo $exception->getMessage();
         $logger->error(sprintf('Worker "%s" could not process message %s', $worker->getName(), $message->getDeliveryTag()));
         $worker->processFailure($envelope, $message, $exception, $queue);
         // Ack the message to unblock queue. Worker should handle failed messages.

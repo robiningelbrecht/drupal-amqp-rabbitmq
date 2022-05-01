@@ -57,10 +57,10 @@ class ConsumerTest extends UnitTestCase
       ->expects($this->once())
       ->method('basic_consume')
       ->with($queue->getName(), '', false, false, false, false)
-      ->willReturn($this->returnCallback(function () use ($message, &$callbackCalled) {
+      ->willReturnCallback(function () use ($message, &$callbackCalled) {
         self::assertEquals('message', $message->getBody());
         $callbackCalled = true;
-      }));
+      });
 
     $channel
       ->expects($this->atLeastOnce())
