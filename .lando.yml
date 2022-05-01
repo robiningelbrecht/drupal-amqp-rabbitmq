@@ -69,19 +69,17 @@ tooling:
     cmd:
       - echo -e "\n\e[36mRABBITMQ IP ADDRESS:\e[32m"
       - hostname -i | cut -d' ' -f1
-  supervisord:
+  consumers-start:
     service: appserver
     user: root
     cmd: supervisord -c /app/supervisord/supervisord.conf
-  services-status:
+  consumers-status:
     service: appserver
     user: root
     cmd: supervisorctl -c /app/supervisord/supervisord.conf status
-  services-update:
+  consumers-restart:
     service: appserver
     user: root
-    cmd: supervisorctl -c /app/supervisord/supervisord.conf update
-  services-restart:
-    service: appserver
-    user: root
-    cmd: supervisorctl -c /app/supervisord/supervisord.conf restart all
+    cmd:
+      - drush amqp:build-supervisord-config
+      - supervisorctl -c /app/supervisord/supervisord.conf update all

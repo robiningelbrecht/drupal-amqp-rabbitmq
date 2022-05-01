@@ -1,0 +1,6 @@
+[program:ampq-consume-test-queue]
+process_name=%(program_name)s-%(process_num)02d
+command=drush amqp:consume test-queue
+numprocs=1
+autostart=true
+autorestart=true

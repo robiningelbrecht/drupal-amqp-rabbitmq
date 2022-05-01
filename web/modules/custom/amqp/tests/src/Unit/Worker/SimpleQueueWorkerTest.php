@@ -79,7 +79,7 @@ class SimpleQueueWorkerTest extends UnitTestCase
     $this->simpleQueueWorker->processFailure($envelope, $message, $exception, $queue);
   }
 
-  protected function setUp()
+  protected function setUp(): void
   {
     parent::setUp();
 

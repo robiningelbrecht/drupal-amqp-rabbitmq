@@ -1,0 +1,6 @@
+[program:ampq-consume-QUEUE_NAME]
+process_name=%(program_name)s-%(process_num)02d
+command=drush amqp:consume QUEUE_NAME
+numprocs=1
+autostart=true
+autorestart=true

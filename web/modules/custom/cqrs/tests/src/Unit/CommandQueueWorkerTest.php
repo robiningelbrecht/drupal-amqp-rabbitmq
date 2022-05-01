@@ -66,7 +66,7 @@ class CommandQueueWorkerTest extends UnitTestCase
     $this->commandQueueWorker->processFailure($command, $message, new \RuntimeException('FAIL'), $queue);
   }
 
-  protected function setUp()
+  protected function setUp(): void
   {
     parent::setUp();
 

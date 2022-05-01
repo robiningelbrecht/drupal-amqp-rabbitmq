@@ -14,6 +14,7 @@ class QueueFactoryTest extends UnitTestCase
   {
     $this->queueFactory->registerQueue(new TestQueue());
     $this->assertEquals(new TestQueue(), $this->queueFactory->getQueue('test-queue'));
+    $this->assertEquals(['test-queue' => new TestQueue()], $this->queueFactory->getQueues());
   }
 
   public function testRegisterQueueItShouldThrow(): void
@@ -26,7 +27,7 @@ class QueueFactoryTest extends UnitTestCase
     $this->queueFactory->getQueue('non-existing-queue');
   }
 
-  protected function setUp()
+  protected function setUp(): void
   {
     parent::setUp();
 

@@ -8,6 +8,12 @@ services:
   Drupal\amqp\AMQPClient:
     autowire: true
 
+  Drupal\amqp\SupervisordConfig:
+    autowire: true
+
+  Drupal\amqp\FilePutContentsWrapper:
+    autowire: true
+
   Drupal\amqp\AMQPStreamConnectionFactory:
     autowire: true
 

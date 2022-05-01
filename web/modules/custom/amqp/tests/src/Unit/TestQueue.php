@@ -13,6 +13,11 @@ class TestQueue implements Queue
     return 'test-queue';
   }
 
+  public function getNumberOfConsumers(): int
+  {
+    return 1;
+  }
+
   public function getWorker(): Worker
   {
     return new TestWorker(new \DateTimeImmutable('now'));

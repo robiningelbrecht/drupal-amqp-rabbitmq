@@ -23,5 +23,9 @@
 
 # Ignore .env files as they are personal
 /.env
+
+# Other files
 .phpunit.result.cache
 /tmp/
+/**/file.tmp
+supervisord/queues/*.conf

@@ -39,7 +39,7 @@ class CommandHandlerFactoryTest extends UnitTestCase
     $this->commandHandlerFactory->registerCommandHandler(new RunUnitTestWithoutCommandHandler());
   }
 
-  protected function setUp()
+  protected function setUp(): void
   {
     parent::setUp();
 

@@ -21,6 +21,7 @@ class SimpleQueueTest extends UnitTestCase
   {
     $this->assertEquals('simple-queue', $this->simpleQueue->getName());
     $this->assertEquals($this->simpleQueueWorker, $this->simpleQueue->getWorker());
+    $this->assertEquals(1, $this->simpleQueue->getNumberOfConsumers());
   }
 
   public function testQueue(): void
@@ -110,7 +111,7 @@ class SimpleQueueTest extends UnitTestCase
     $this->simpleQueue->queueBatch(['test']);
   }
 
-  protected function setUp()
+  protected function setUp(): void
   {
     parent::setUp();
 

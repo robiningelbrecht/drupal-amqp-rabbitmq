@@ -173,4 +173,4 @@ and tag it with `cqrs_command_handler`:
 
 ## Real-time migration example
 
-## Run a consumer as background process
+## Run a consumer as a background process

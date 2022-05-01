@@ -23,7 +23,7 @@ class FailedQueueTest extends UnitTestCase
     $this->failedQueue->getWorker();
   }
 
-  protected function setUp()
+  protected function setUp(): void
   {
     parent::setUp();
 

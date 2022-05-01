@@ -11,6 +11,8 @@ interface Queue
 
   public function getWorker(): Worker;
 
+  public function getNumberOfConsumers(): int;
+
   public function queue(Envelope $envelope): void;
 
   public function queueBatch(array $envelopes): void;

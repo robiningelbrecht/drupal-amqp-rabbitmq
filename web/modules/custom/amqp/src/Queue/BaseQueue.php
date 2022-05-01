@@ -3,7 +3,6 @@
 namespace Drupal\amqp\Queue;
 
 use Drupal\amqp\AMQPChannelFactory;
-use Drupal\amqp\AMQPEnvelope;
 use Drupal\amqp\Envelope\Envelope;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -16,6 +15,11 @@ abstract class BaseQueue implements Queue
   )
   {
 
+  }
+
+  public function getNumberOfConsumers(): int
+  {
+    return 1;
   }
 
   public function queue(Envelope $envelope): void

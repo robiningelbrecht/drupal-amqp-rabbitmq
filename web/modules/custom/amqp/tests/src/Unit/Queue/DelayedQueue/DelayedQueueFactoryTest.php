@@ -37,7 +37,7 @@ class DelayedQueueFactoryTest extends UnitTestCase
     );
   }
 
-  protected function setUp()
+  protected function setUp(): void
   {
     parent::setUp();
 

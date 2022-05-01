@@ -33,7 +33,7 @@ class CommandDispatcherTest extends UnitTestCase
     $this->commandDispatcher->dispatch($command);
   }
 
-  protected function setUp()
+  protected function setUp(): void
   {
     parent::setUp();
 

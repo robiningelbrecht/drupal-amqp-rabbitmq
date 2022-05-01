@@ -6,6 +6,7 @@ use Drupal\amqp\Clock\Clock;
 use Drupal\amqp\Consumer;
 use Drupal\amqp\Envelope\AMQPEnvelope;
 use Drupal\amqp\Queue\QueueFactory;
+use Drupal\amqp\SupervisordConfig;
 use Drush\Commands\DrushCommands;
 
 class AmqpDrushCommands extends DrushCommands
@@ -14,6 +15,7 @@ class AmqpDrushCommands extends DrushCommands
   public function __construct(
     private Consumer $consumer,
     private QueueFactory $queueFactory,
+    private SupervisordConfig $supervisordConfig,
     private Clock $clock,
   )
   {
@@ -27,6 +29,14 @@ class AmqpDrushCommands extends DrushCommands
   {
     $queue = $this->queueFactory->getQueue($queueName);
     $this->consumer->consume($queue);
+  }
+
+  /**
+   * @command amqp:build-supervisord-config
+   */
+  public function buildSupervisordConfig()
+  {
+    $this->supervisordConfig->writeAll();
   }
 
   /**
