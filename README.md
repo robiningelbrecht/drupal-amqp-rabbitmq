@@ -174,3 +174,29 @@ and tag it with `cqrs_command_handler`:
 ## Real-time migration example
 
 ## Run a consumer as a background process
+
+Generally you want to run consumers as a background process and keep them "alive" for as long
+your server is up. This can be done using `systemd`, but I choose to use [supervisord](http://supervisord.org/)
+
+> Supervisor is a client/server system that allows its users to monitor and control a number of
+> processes on UNIX-like operating systems.
+
+To register all consumers as a process, just run `lando consumers-start`. This will spin up supervisord
+and automatically create the necessary consumers for all of you queues.
+
+When adding/removing queues or when updating queue config, you need to run `lando consumers-restart`
+for  your new settings to be picked up.
+
+**Important**: Whenever you make changes to you code, make sure to run the restart command as well,
+as you don't want your consumers to be running with old code.
+
+### Check the status of your consumers
+
+You can just run `lando consumers-status`, this should output something like this:
+
+```
+ampq-consume-queue-one:ampq-consume-queue-one-00   RUNNING   pid 1219, uptime 0:00:06
+ampq-consume-queue-one:ampq-consume-queue-one-01   RUNNING   pid 1215, uptime 0:00:07
+ampq-consume-queue-one:ampq-consume-queue-two-01   RUNNING   pid 1216, uptime 0:00:07
+```
+

@@ -72,7 +72,9 @@ tooling:
   consumers-start:
     service: appserver
     user: root
-    cmd: supervisord -c /app/supervisord/supervisord.conf
+    cmd:
+      - drush amqp:build-supervisord-config
+      - supervisord -c /app/supervisord/supervisord.conf
   consumers-status:
     service: appserver
     user: root
