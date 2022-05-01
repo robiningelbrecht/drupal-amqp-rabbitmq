@@ -29,7 +29,7 @@ class SupervisordConfigTest extends UnitTestCase
       ->expects($this->once())
       ->method('filePutContents')
       ->willReturnCallback(function (string $fileName, string $contents) {
-        $this->assertEquals('/app/web/../supervisord/queues/test-queue.conf', $fileName);
+        $this->assertStringContainsString('../supervisord/queues/test-queue.conf', $fileName);
         $this->assertMatchesTextSnapshot($contents);
       });
 
