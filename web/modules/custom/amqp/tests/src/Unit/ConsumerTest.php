@@ -6,7 +6,9 @@ use Drupal\amqp\AMQPChannelFactory;
 use Drupal\amqp\AMQPStreamConnectionFactory;
 use Drupal\amqp\ConsoleLogger;
 use Drupal\amqp\Consumer;
+use Drupal\amqp\Envelope\AMQPEnvelope;
 use Drupal\amqp\Queue\Queue;
+use Drupal\amqp\Worker\Worker;
 use Drupal\amqp\Worker\WorkerMaxLifeTimeOrIterationsExceeded;
 use Drupal\Tests\UnitTestCase;
 use PhpAmqpLib\Channel\AMQPChannel;
@@ -62,10 +64,17 @@ class ConsumerTest extends UnitTestCase
         $callbackCalled = true;
       });
 
+    $matcher = $this->exactly(2);
     $channel
-      ->expects($this->atLeastOnce())
+      ->expects($matcher)
       ->method('is_open')
-      ->willReturn(false);
+      ->willReturnCallback(function () use ($matcher) {
+        if ($matcher->getInvocationCount() === 1) {
+          return true;
+        }
+
+        return false;
+      });
 
     $this->logger
       ->expects($this->never())
@@ -114,11 +123,11 @@ class ConsumerTest extends UnitTestCase
       ->expects($this->once())
       ->method('basic_consume')
       ->with($queue->getName(), '', false, false, false, false)
-      ->willReturn($this->returnCallback(function () use ($message, &$callbackCalled) {
+      ->willReturnCallback(function () use ($message, &$callbackCalled) {
         self::assertEquals('message', $message->getBody());
         $callbackCalled = true;
-        throw  new WorkerMaxLifeTimeOrIterationsExceeded();
-      }));
+        throw new WorkerMaxLifeTimeOrIterationsExceeded();
+      });
 
     $channel
       ->expects($this->never())
@@ -139,6 +148,155 @@ class ConsumerTest extends UnitTestCase
 
     $this->consumer->consume($queue);
     $this->assertTrue($callbackCalled);
+  }
+
+  public function testConsumeCallback(): void
+  {
+    $envelope = AMQPEnvelope::fromContentAndDate('message', new \DateTimeImmutable('now'));
+    $channel = $this->createMock(AMQPChannel::class);
+    $queue = $this->createMock(Queue::class);
+    $worker = $this->createMock(Worker::class);
+
+    $message = new AMQPMessage(
+      serialize($envelope),
+      ['content_type' => 'text/plain', 'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]
+    );
+    $message->setChannel($channel);
+    $message->setDeliveryInfo('tag', false, null, null);
+
+    $queue
+      ->expects($this->once())
+      ->method('getWorker')
+      ->willReturn($worker);
+
+    $worker
+      ->expects($this->once())
+      ->method('getName')
+      ->willReturn('test-worker');
+
+    $this->logger
+      ->expects($this->once())
+      ->method('debug')
+      ->with('Worker "test-worker" started processing message tag');
+
+    $worker
+      ->expects($this->once())
+      ->method('processMessage')
+      ->with($envelope, $message);
+
+    $channel
+      ->expects($this->once())
+      ->method('basic_ack')
+      ->with('tag');
+
+    Consumer::consumeCallback(
+      $message,
+      $queue,
+      $this->logger
+    );
+  }
+
+  public function testConsumeCallbackWorkerMaxLifeTimeOrIterationsExceeded(): void
+  {
+    $channel = $this->createMock(AMQPChannel::class);
+    $queue = $this->createMock(Queue::class);
+    $worker = $this->createMock(Worker::class);
+
+    $message = new AMQPMessage(
+      serialize(AMQPEnvelope::fromContentAndDate('message', new \DateTimeImmutable('now'))),
+      ['content_type' => 'text/plain', 'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]
+    );
+    $message->setChannel($channel);
+    $message->setDeliveryInfo('tag', false, null, null);
+
+    $queue
+      ->expects($this->once())
+      ->method('getWorker')
+      ->willReturn($worker);
+
+    $worker
+      ->expects($this->once())
+      ->method('getName')
+      ->willReturn('test-worker');
+
+    $worker
+      ->expects($this->once())
+      ->method('processMessage')
+      ->willThrowException(new WorkerMaxLifeTimeOrIterationsExceeded());
+
+    $this->logger
+      ->expects($this->once())
+      ->method('warning')
+      ->with('Worker max life time or iterations exceeded. Re-queueing message for next consumer.');
+
+    $channel
+      ->expects($this->once())
+      ->method('basic_nack')
+      ->with('tag', false, true);
+
+    $channel
+      ->expects($this->never())
+      ->method('basic_ack');
+
+    $this->expectException(WorkerMaxLifeTimeOrIterationsExceeded::class);
+
+    Consumer::consumeCallback(
+      $message,
+      $queue,
+      $this->logger
+    );
+  }
+
+  public function testConsumeCallbackOnException(): void
+  {
+    $envelope = AMQPEnvelope::fromContentAndDate('message', new \DateTimeImmutable('now'));
+    $channel = $this->createMock(AMQPChannel::class);
+    $queue = $this->createMock(Queue::class);
+    $worker = $this->createMock(Worker::class);
+
+    $message = new AMQPMessage(
+      serialize($envelope),
+      ['content_type' => 'text/plain', 'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]
+    );
+    $message->setChannel($channel);
+    $message->setDeliveryInfo('tag', false, null, null);
+
+    $queue
+      ->expects($this->once())
+      ->method('getWorker')
+      ->willReturn($worker);
+
+    $worker
+      ->expects($this->exactly(2))
+      ->method('getName')
+      ->willReturn('test-worker');
+
+    $exception = new \RuntimeException();
+    $worker
+      ->expects($this->once())
+      ->method('processMessage')
+      ->willThrowException($exception);
+
+    $this->logger
+      ->expects($this->once())
+      ->method('error')
+      ->with('Worker "test-worker" could not process message tag');
+
+    $worker
+      ->expects($this->once())
+      ->method('processFailure')
+      ->with($envelope, $message, $exception, $queue);
+
+    $channel
+      ->expects($this->once())
+      ->method('basic_ack')
+      ->with('tag');
+
+    Consumer::consumeCallback(
+      $message,
+      $queue,
+      $this->logger
+    );
   }
 
   protected function setUp(): void

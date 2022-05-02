@@ -25,12 +25,12 @@ class TestQueue implements Queue
 
   public function queue(Envelope $envelope): void
   {
-    // TODO: Implement queue() method.
+
   }
 
   public function queueBatch(array $envelopes): void
   {
-    // TODO: Implement queueBatch() method.
+
   }
 
 }

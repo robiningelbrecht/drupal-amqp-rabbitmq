@@ -41,7 +41,7 @@ class TestWorker implements Worker
 
   public function maxLifeTimeReached(): bool
   {
-    return new \DateTimeImmutable('now') >= $this->maxLifeTimeDateTime;
+    return new \DateTimeImmutable('2022-05-01 01:00') >= $this->maxLifeTimeDateTime;
   }
 
   public function getMaxIterations(): int

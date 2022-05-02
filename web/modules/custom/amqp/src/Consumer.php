@@ -2,7 +2,9 @@
 
 namespace Drupal\amqp;
 
+use Drupal\amqp\Envelope\Envelope;
 use Drupal\amqp\Queue\Queue;
+use Drupal\amqp\Worker\Worker;
 use Drupal\amqp\Worker\WorkerMaxLifeTimeOrIterationsExceeded;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -33,28 +35,7 @@ class Consumer
     $logger = $this->logger;
 
     $callback = static function (AMQPMessage $message) use ($queue, $logger) {
-      $worker = $queue->getWorker();
-      $envelope = unserialize($message->getBody());
-
-      try {
-        if ($worker->maxLifeTimeReached() || $worker->maxIterationsReached()) {
-          throw new WorkerMaxLifeTimeOrIterationsExceeded();
-        }
-
-        $logger->debug(sprintf('Worker "%s" started processing message %s', $worker->getName(), $message->getDeliveryTag()));
-        $worker->processMessage($envelope, $message);
-        $message->getChannel()->basic_ack($message->getDeliveryTag());
-      } catch (WorkerMaxLifeTimeOrIterationsExceeded $e) {
-        // Requeue message to make sure next consumer can process it.
-        $logger->warning('Worker max life time or iterations exceeded. Re-queueing message for next consumer.');
-        $message->getChannel()->basic_nack($message->getDeliveryTag(), false, true);
-        throw $e;
-      } catch (\Exception|\Error $exception) {
-        $logger->error(sprintf('Worker "%s" could not process message %s', $worker->getName(), $message->getDeliveryTag()));
-        $worker->processFailure($envelope, $message, $exception, $queue);
-        // Ack the message to unblock queue. Worker should handle failed messages.
-        $message->getChannel()->basic_ack($message->getDeliveryTag());
-      }
+      Consumer::consumeCallback($message, $queue, $logger);
     };
 
     try {
@@ -67,6 +48,35 @@ class Consumer
       $this->logger->warning('Closing connection...');
       $channel->close();
       $this->AMQPStreamConnectionFactory->get()->close();
+    }
+  }
+
+  public static function consumeCallback(
+    AMQPMessage $message,
+    Queue $queue,
+    ConsoleLogger $logger): void
+  {
+    $worker = $queue->getWorker();
+    $envelope = unserialize($message->getBody());
+
+    try {
+      if ($worker->maxLifeTimeReached() || $worker->maxIterationsReached()) {
+        throw new WorkerMaxLifeTimeOrIterationsExceeded();
+      }
+
+      $logger->debug(sprintf('Worker "%s" started processing message %s', $worker->getName(), $message->getDeliveryTag()));
+      $worker->processMessage($envelope, $message);
+      $message->getChannel()->basic_ack($message->getDeliveryTag());
+    } catch (WorkerMaxLifeTimeOrIterationsExceeded $exception) {
+      // Requeue message to make sure next consumer can process it.
+      $logger->warning('Worker max life time or iterations exceeded. Re-queueing message for next consumer.');
+      $message->getChannel()->basic_nack($message->getDeliveryTag(), false, true);
+      throw $exception;
+    } catch (\Throwable $exception) {
+      $logger->error(sprintf('Worker "%s" could not process message %s', $worker->getName(), $message->getDeliveryTag()));
+      $worker->processFailure($envelope, $message, $exception, $queue);
+      // Ack the message to unblock queue. Worker should handle failed messages.
+      $message->getChannel()->basic_ack($message->getDeliveryTag());
     }
   }
 
