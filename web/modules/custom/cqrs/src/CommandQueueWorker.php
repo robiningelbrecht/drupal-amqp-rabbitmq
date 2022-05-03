@@ -31,12 +31,12 @@ class CommandQueueWorker extends BaseWorker
   {
     /** @var Command $command */
     $command = $envelope;
-    $this->commandDispatcher->dispatch($command);
     $this->logger->success(sprintf(
       'Worker "%s" dispatched command "%s"',
       $this->getName(),
       (new \ReflectionClass($command))->getShortName(),
     ));
+    $this->commandDispatcher->dispatch($command);
   }
 
   public function processFailure(Envelope $envelope, AMQPMessage $message, \Throwable $exception, Queue $queue): void

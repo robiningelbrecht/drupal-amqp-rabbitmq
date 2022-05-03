@@ -1,0 +1,10 @@
+uuid: a6480e0e-8296-4799-a82c-cea41d462bab
+langcode: en
+status: true
+dependencies: {  }
+id: breaking_news
+label: 'Breaking news'
+description: null
+source_type: 'AMQP messages'
+module: null
+shared_configuration: null

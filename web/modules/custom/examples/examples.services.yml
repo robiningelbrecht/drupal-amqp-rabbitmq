@@ -1,10 +1,10 @@
 services:
-  Drupal\examples\AddDatabaseLog\AddDatabaseLogCommandHandler:
+  Drupal\examples\MigrateBreakingNewsArticle\MigrateBreakingNewsArticleCommandHandler:
     autowire: true
     tags:
       - { name: cqrs_command_handler }
 
   # Services from Drupal core.
   # We expose them again, so we can auto wire this crap.
-  Drupal\Core\Logger\LoggerChannelFactory:
-    parent: logger.factory
+  Drupal\migrate\Plugin\MigrationPluginManager:
+    parent: plugin.manager.migration

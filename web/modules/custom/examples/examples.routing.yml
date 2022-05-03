@@ -1,0 +1,9 @@
+examples.generate_migration_message:
+  path: '/admin/content/generate-migration-message'
+  defaults:
+    _title: 'Push migration message to Q'
+    _form: '\Drupal\examples\Form\GenerateMigrationMessageForm'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE

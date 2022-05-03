@@ -1,0 +1,17 @@
+uuid: cdbf7768-e29e-4152-ae11-218a04586fcf
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: 'Breaking news'
+type: breaking_news
+description: ''
+help: ''
+new_revision: false
+preview_mode: 0
+display_submitted: true

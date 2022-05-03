@@ -1,0 +1,18 @@
+id: breaking_news_node
+label: Breaking news node
+migration_group: breaking_news
+source:
+  plugin: embedded_data
+  data_rows: {}
+  ids:
+    external_id:
+      type: string
+destination:
+  plugin: entity:node
+  default_bundle: breaking_news
+process:
+  title: title
+  body: body
+  uid:
+    plugin: default_value
+    default_value: 1

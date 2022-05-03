@@ -1,0 +1,4 @@
+examples.generate_migration_message:
+  route_name: examples.generate_migration_message
+  title: 'Push migration message to Q'
+  base_route: system.admin_content

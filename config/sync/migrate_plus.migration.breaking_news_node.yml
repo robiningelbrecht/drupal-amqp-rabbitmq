@@ -1,0 +1,27 @@
+uuid: 9cd39804-f12d-4c37-a0f2-9b25af5e6050
+langcode: en
+status: true
+dependencies: {  }
+id: breaking_news_node
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: null
+migration_group: breaking_news
+label: 'Breaking news node'
+source:
+  plugin: embedded_data
+  data_rows: {  }
+  ids:
+    external_id:
+      type: string
+process:
+  title: title
+  body: body
+  uid:
+    plugin: default_value
+    default_value: 1
+destination:
+  plugin: 'entity:node'
+  default_bundle: breaking_news
+migration_dependencies: null

@@ -1,0 +1,3 @@
+id: breaking_news
+label: Breaking news
+source_type: AMQP messages

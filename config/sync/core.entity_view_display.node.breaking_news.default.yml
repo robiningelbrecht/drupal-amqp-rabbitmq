@@ -1,0 +1,28 @@
+uuid: 347b1117-e049-4b4b-afe8-d9c92891a7c9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.breaking_news.body
+    - node.type.breaking_news
+  module:
+    - text
+    - user
+id: node.breaking_news.default
+targetEntityType: node
+bundle: breaking_news
+mode: default
+content:
+  body:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden: {  }

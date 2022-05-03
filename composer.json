@@ -21,6 +21,9 @@
         "drupal/core-composer-scaffold": "^9.3",
         "drupal/core-project-message": "^9.3",
         "drupal/core-recommended": "^9.3",
+        "drupal/devel": "^4.1",
+        "drupal/migrate_plus": "^6.0",
+        "drupal/migrate_tools": "^6.0",
         "drush/drush": "^11.0",
         "php-amqplib/php-amqplib": "^3.1"
     },
