@@ -99,6 +99,8 @@ To declare a new queue, just add a new entry to your `services.yml` and tag it w
 
 Make sure this class extends `BaseQueue`, so you don't have to bother queueing messages yourself.
 
+@TODO: Explain how to push message to Q
+
 ### Push a message to it's corresponding failed Q
 
 If, fore some reason, a message could not be processed, you might want to log it somewhere.
@@ -172,6 +174,8 @@ and tag it with `cqrs_command_handler`:
 ```
 
 ## Real-time migration example
+
+@TODO
 
 ## Run consumers as background processes
 
