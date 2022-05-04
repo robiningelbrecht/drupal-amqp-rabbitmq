@@ -157,7 +157,7 @@ routing key of the binding is the command queue name to where it has to be route
 ## Define a new CommandHandler
 
 I like to use Commands and CommandHandlers to persist changes to the database. That is basically what
-the `cqrs` module allows is for. It provides a simple framework that
+the `cqrs` module is for. It provides a simple framework that
 
 * Allows you to define new commands and their corresponding command handlers
 * Allows you to push messages to command queues
