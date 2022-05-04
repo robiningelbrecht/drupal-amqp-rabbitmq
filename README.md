@@ -59,8 +59,8 @@ There are basically 3 important terms to keep in mind:
 The `amqp` module provides a basic framework that allows you to
 
 * Define queues and workers
+* Push messages to queues
 * Consume queues with a *drush* command
-* Push messages to queues with a *drush* command
 
 <img src="https://github.com/robiningelbrecht/drupal-amqp-rabbitmq/raw/master/readme/rmq-drupal.svg" alt="RabbitMQ">
 
