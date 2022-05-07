@@ -175,7 +175,10 @@ and tag it with `cqrs_command_handler`:
 
 ## Real-time migration example
 
-@TODO
+The example module contains... an example (deuh) that shows how to implement a "real-time" migration for 
+the content type "Breaking news". 
+
+#TODO: Finish
 
 ## Run consumers as background processes
 
