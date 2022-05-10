@@ -13,7 +13,7 @@
 
 ------
 
-This repository aims to illustrate how to setup AMQP within Drupal. It contains a base structure with some working examples that use CommandHandlers to handle AMQP messages.
+This repository aims to illustrate how to set up AMQP within Drupal. It contains a base structure with some working examples that use CommandHandlers to handle AMQP messages.
 
 ## Installation
 
