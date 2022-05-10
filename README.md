@@ -180,7 +180,7 @@ the content type "Breaking news".
 
 Navigate to `admin/content/generate-migration-message`. This form allows you to push a migration message to 
 a queue. It simulates how a third party could push a message to a Drupal migration queue 
-where it will get picked up by a consumer. The migration framework will then so the heavy lifting. 
+where it will get picked up by a consumer. The migration framework will then do the heavy lifting. 
 
 ## Run consumers as background processes
 
