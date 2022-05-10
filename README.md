@@ -175,12 +175,14 @@ and tag it with `cqrs_command_handler`:
 
 ## Real-time migration example
 
-The example module contains... an example (deuh) that shows how to implement a "real-time" migration for 
-the content type "Breaking news". 
+The example module contains... an example (deuh) that shows how to implement a "real-time" migration for
+the content type "Breaking news".
 
-Navigate to `admin/content/generate-migration-message`. This form allows you to push a migration message to 
-a queue. It simulates how a third party could push a message to a Drupal migration queue 
-where it will get picked up by a consumer. The migration framework will then do the heavy lifting. 
+Navigate to `admin/content/generate-migration-message`. This form allows you to push a migration message to
+a queue. It simulates how a third party could push a message to a Drupal migration queue
+where it will get picked up by a consumer. The migration framework will then do the heavy lifting.
+
+<img src="https://github.com/robiningelbrecht/drupal-amqp-rabbitmq/raw/master/readme/real-time-migration.gif" alt="Real time migration">
 
 ## Run consumers as background processes
 
