@@ -52,9 +52,9 @@ $settings['amqp_credentials'] = [
 
 There are basically 3 important terms to keep in mind:
 
-* **Worker**: A specific class that processes a message, also handles failures in case a message could not be processed
+* **Worker**: A specific class that processes a message, also handles failures in case it could not process the message
 * **Queue**: A class that represents a RabbitMQ queue, allows for messages to be pushed to the corresponding queue. Each queue is linked to a worker
-* **Consumer**: Process that consumes a specific queue and it's messages, each queue can have zero or more consumers
+* **Consumer**: Process that consumes a specific queue and its messages. Each queue can have zero or more consumers
 
 The `amqp` module provides a basic framework that allows you to
 
